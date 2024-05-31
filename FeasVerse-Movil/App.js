@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Prueba from './src/screens/Prueba'
+import { LogBox } from 'react-native'; // NO QUITAR
 
 export default function App() {
+  // Ignore all log notifications porque ka advertencia no supe como sacarla, entonces, que no se muestre lol, NO QUITAR
+  LogBox.ignoreAllLogs();
   const [currentScreen, setCurrentScreen] = useState('App');
 
   const gotoPrueba = () => {
