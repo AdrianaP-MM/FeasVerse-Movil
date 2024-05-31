@@ -21,7 +21,7 @@ export default function App() {
     <View style={styles.container}>
       {currentScreen === 'App' ? (
         <View>
-          <Text>Open up App.js to start working on your app!</Text>
+          <Text>Open up App.js to start worrffffffking on your app!</Text>
           <Button title="Go to Prueba" onPress={gotoPrueba} />
         </View>
       ) : (
