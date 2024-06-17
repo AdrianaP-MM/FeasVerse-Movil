@@ -5,51 +5,59 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomTextInput from '../../components/inputs/CustomTextInput '; // Importamos nuestro componente CustomTextInput
 
 const Code = ({ route, navigation }) => {
-    const [code, setCode] = useState('');
-    const email = route.params?.email;
+    const [code, setCode] = useState(''); // Estado para almacenar el código ingresado por el usuario
+    const email = route.params?.email; // Obtenemos el email del parámetro route
 
+    // Función para manejar el cambio en el campo de texto del código
     const handleCodeChange = (text) => {
-        setCode(text);
+        setCode(text); // Actualizamos el estado 'code' con el valor ingresado
     };
 
+    // Función para manejar la verificación del código
     const handleVerify = () => {
-        console.log('Código ingresado:', code);
-        navigation.navigate('NewPassword');
+        console.log('Código ingresado:', code); // Mostramos el código ingresado en la consola
+        navigation.navigate('NewPassword'); // Navegamos a la pantalla 'NewPassword' (probablemente para establecer una nueva contraseña)
     };
 
     return (
         <View style={styles.container}>
+            {/* Botón para retroceder */}
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back" size={24} color="#1591CC" />
             </TouchableOpacity>
             <View style={styles.content}>
                 <View>
+                    {/* Título y subtítulo */}
                     <Text style={styles.title}>Por favor, revisa tu correo electrónico</Text>
                     <Text style={styles.subtitle}>Hemos enviado un código a {email}</Text>
                     <Text style={styles.label}>Código</Text>
                 </View>
-                {/* Usamos CustomTextInput en lugar de TextInput */}
+                {/* Usamos nuestro componente CustomTextInput en lugar de TextInput estándar */}
                 <CustomTextInput
                     placeholder="Ingresa el código"
                     keyboardType="numeric"
                     value={code}
-                    onChangeText={handleCodeChange}
+                    onChangeText={handleCodeChange} // Proporcionamos la función para manejar el cambio en el texto
                 />
+                {/* Botón para verificar el código */}
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={handleVerify}
+                    onPress={handleVerify} // Llama a la función para verificar el código
                 >
                     <Text style={styles.buttonText}>Verificar</Text>
                 </TouchableOpacity>
             </View>
+            {/* Texto para regresar */}
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backTextContainer}>
                 <Text style={styles.backText}>Regresar</Text>
             </TouchableOpacity>
+            {/* Barra de estado de la aplicación */}
             <StatusBar style="auto" />
         </View>
     );
 };
 
+// Estilos para los componentes de la pantalla
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -117,4 +125,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Code;
+export default Code; // Exportamos el componente Code para ser utilizado en otras partes de la aplicación
