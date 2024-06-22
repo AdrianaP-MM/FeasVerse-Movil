@@ -8,6 +8,7 @@ import Code from './src/screens/restablecer/Code';
 import NewPassword from './src/screens/restablecer/NewPassword';
 import Message from './src/screens/restablecer/Message';
 import Carrito from './src/screens/configuraciones/Carrito';
+import LogIn from './src/screens/Login/Login';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ const MainScreen = ({ navigation }) => {
             <Button title="Go to Mail" onPress={() => navigation.navigate('Correo')} />
             <Button title="Go to Code" onPress={() => navigation.navigate('Code', { email: '' })} />
             <Button title="Go to Carrito" onPress={() => navigation.navigate('Carrito')} />
+            <Button title="Go to LogIn" onPress={() => navigation.navigate('LogIn')} />
         </View>
     );
 };
@@ -34,6 +36,7 @@ const App = () => {
                 <Stack.Screen name="NewPassword" component={NewPassword} />
                 <Stack.Screen name="Message" component={Message} />
                 <Stack.Screen name="Carrito" component={Carrito} />
+                <Stack.Screen name="LogIn" component={LogIn} />
             </Stack.Navigator>
         </NavigationContainer>
     );
