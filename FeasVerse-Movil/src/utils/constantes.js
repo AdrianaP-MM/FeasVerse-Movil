@@ -15,7 +15,7 @@ export const FontSizes = {
 //Ip de la maquina locala 
 //utilizar la direccion IP del servidor y no localhost
 
-export const IP = 'http://192.168.137.210'; //EMILIANO
+export const IP = 'http://192.168.1.20'; //EMILIANO
 //export const IP = 'http://'; //FERNANDO
 //export const IP = 'http://';  //ADRIANA
 
