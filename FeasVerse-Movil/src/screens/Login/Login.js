@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Image, Text } from 'react-native';
+import { StyleSheet, View, Button, Image, Text, Alert } from 'react-native';
 import TextInputC from '../../components/inputs/Border_Down';
-import { Colors, FontSizes } from '../../utils/constantes';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 const logoImg = require("../../img/LogoFeasVerse.png");
 
-const LogIn = ({ onBack }) => {
+const LogIn = ({ logueado, setLogueado }) => {
+
+    const [correo, setCorreo] = useState('');
+    const [clave, setClave] = useState('');
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
     useEffect(() => {
@@ -29,6 +32,41 @@ const LogIn = ({ onBack }) => {
         return <View />;
     }
 
+    const handlerLogin = async () => {
+        let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logIn`;
+        const formData = new FormData();
+        formData.append('correo', correo);
+        formData.append('clave', clave);
+    
+        try {
+            const fetchApi = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            
+            // Verifica si la respuesta es HTML
+            const textResponse = await fetchApi.text();
+            if (textResponse.startsWith('<')) {
+                console.error('La respuesta es HTML:', textResponse);
+                Alert.alert('Error de servidor', 'La respuesta del servidor no es válida.');
+                return;
+            }
+    
+            // Intenta convertir a JSON
+            const datos = JSON.parse(textResponse);
+            if (datos.status) {
+                setLogueado(!logueado);
+            } else {
+                console.log(datos);
+                Alert.alert('Error sesión', datos.error);
+            }
+        } catch (error) {
+            console.error('Error al realizar la solicitud:', error);
+            Alert.alert('Error', 'Hubo un problema con la solicitud.');
+        }
+    }
+    
+
     return (
         <View style={styles.container}>
             <Image source={logoImg} style={styles.logo} />
@@ -39,11 +77,15 @@ const LogIn = ({ onBack }) => {
                 Inicio de sesión
             </Text>
             <TextInputC
+                value={correo}
+                onChangeText={setCorreo}
                 label="Correo electrónico"
                 keyboardType="email-address"
                 placeholder="Introduce tu correo"
             />
             <TextInputC
+                value={clave}
+                onChangeText={setClave}
                 label="Contraseña"
                 maxLength={20}
                 secureTextEntry={true}
@@ -52,9 +94,7 @@ const LogIn = ({ onBack }) => {
             <View style={styles.btnContainer}>
                 <Button
                     title="Iniciar Sesión"
-                    onPress={() => {
-                        // Lógica para iniciar sesión
-                    }}
+                    onPress={handlerLogin}
                 />
             </View>
             <Text style={styles.text}>
