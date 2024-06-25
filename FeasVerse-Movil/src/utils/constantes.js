@@ -1,5 +1,8 @@
 export const Colors = {
-    Titulos: '#1591CC',
+    TituloL: '#1591CC',
+    TituloInicio: '1E293B',
+    Boton1: '1591CC',
+    pass: '828282'
 };
 
 export const FontSizes = {
