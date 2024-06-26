@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Image, Text, Alert } from 'react-native';
+import { StyleSheet, View, Button, Image, Text, Alert, TouchableOpacity } from 'react-native';
 import TextInputC from '../../components/inputs/Border_Down';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 
 const logoImg = require("../../img/LogoFeasVerse.png");
 
-const LogIn = ({ logueado, setLogueado }) => {
-    const [correo, setCorreo] = useState('fer12@gmail.com');
-    const [clave, setClave] = useState('clave12345');
+const LogIn = ({ logueado, setLogueado, navigation }) => {
+    const [correo, setCorreo] = useState('');
+    const [clave, setClave] = useState('');
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
+    // Función para cambiar de pantalla
+    const handelViewInicio = () => {
+        navigation.navigate('Inicio'); // Navegamos a la pantalla 'NewPassword'
+    };
+
+    const handelViewRestablecer = () => {
+        navigation.navigate('Correo'); // Navegamos a la pantalla 'NewPassword'
+    };
+
+    const handelViewRegistrar = () => {
+        navigation.navigate('Inicio'); // Navegamos a la pantalla 'NewPassword'
+    };
 
     useEffect(() => {
         const loadFonts = async () => {
@@ -46,14 +58,14 @@ const LogIn = ({ logueado, setLogueado }) => {
         const datos = await fetchApi.json();
         if (datos.status) {
             Alert.alert('Yei', datos.error);
+            console.log('SIIIIIIIIIIIIIII');
+            handelViewInicio();
         }
         else {
             console.log(datos);
-            // Alert the user about the error
             Alert.alert('Error sesion', datos.error);
+            console.log('NOOOOOOOOOO')
         }
-
-
     };
 
     const handleLogOut = async () => {
@@ -69,8 +81,6 @@ const LogIn = ({ logueado, setLogueado }) => {
             // Alert the user about the error
             Alert.alert('Error sesion', datos.error);
         }
-
-
     }
 
     return (
@@ -84,15 +94,15 @@ const LogIn = ({ logueado, setLogueado }) => {
             </Text>
             <TextInputC
                 label="Correo electrónico"
-                value={correo}
-                onChangeText={setCorreo}
+                valor={correo}
+                setValor={setCorreo}
                 keyboardType="email-address"
                 placeholder="Introduce tu correo"
                 autoCapitalize="none"
             />
             <TextInputC
-                value={clave}
-                onChangeText={setClave}
+                valor={clave}
+                setValor={setClave}
                 label="Contraseña"
                 placeholder="Introduce tu contraseña"
                 secureTextEntry={true}
@@ -109,12 +119,22 @@ const LogIn = ({ logueado, setLogueado }) => {
                     onPress={handleLogOut}
                 />
             </View>
-            <Text style={styles.text}>
-                ¿Olvidaste tu contraseña? <Text style={styles.text1}>Restablecer</Text>
-            </Text>
-            <Text style={styles.text2}>
-                ¿No tienes cuenta? <Text style={styles.text1}>Crea una cuenta</Text>
-            </Text>
+            <View style={styles.row}>
+                <Text style={styles.text}>
+                    ¿Olvidaste tu contraseña? 
+                </Text>
+                <TouchableOpacity onPress={handelViewRestablecer}>
+                    <Text style={styles.link}>Restablecer</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.row}>
+                <Text style={styles.text1}>
+                    ¿No tienes cuenta? 
+                </Text>
+                <TouchableOpacity onPress={handelViewRegistrar}>
+                    <Text style={styles.link1}>Crea una cuenta</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -151,16 +171,37 @@ const styles = StyleSheet.create({
         fontFamily: 'Bold',
         marginBottom: 60,
     },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
     text: {
         color: Colors.pass,
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
-        marginTop: 10,
+        
     },
-    text1: {
+    link: {
         color: Colors.TituloL,
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
+        marginLeft: 5,
+        textDecorationLine: 'underline',
+    },
+    text1: {
+        color: Colors.pass,
+        fontSize: FontSizes.medium,
+        fontFamily: 'Regular',
+        marginTop: 50
+        
+    },
+    link1: {
+        color: Colors.TituloL,
+        fontSize: FontSizes.medium,
+        fontFamily: 'Regular',
+        marginLeft: 5,
+        marginTop: 50
     },
     text2: {
         marginTop: 100,
