@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import Text from '../utils/Text';
 
 export default function Button({ text, action_button }) {
     return (
@@ -6,7 +7,10 @@ export default function Button({ text, action_button }) {
             style={styles.btn}
             onPress={action_button}
         >
-            <Text style={styles.text}>{text}</Text>
+            <Text
+                texto={text}
+                textAlign='center'
+            />
         </TouchableOpacity>
     );
 }
@@ -14,13 +18,11 @@ export default function Button({ text, action_button }) {
 const styles = StyleSheet.create({
     btn: {
         backgroundColor: 'white',
-        padding: 10,
-        width: 150,
+        paddingVertical: 10,
+        paddingHorizontal: 8,
+        marginRight: 9,
+        marginVertical: 10,
+        width: '(100%) / 3',
         borderRadius: 100,
     },
-    text: {
-        color: 'black',
-        textAlign: 'center',
-        fontWeight: '500'
-    }
 });

@@ -1,0 +1,82 @@
+import React from 'react';
+import Text from '../utils/Text';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+
+export default function CardCita({ accionCard }) {
+    return (
+        <TouchableOpacity onPress={accionCard}>
+            <View style={styles.containerTotal}>
+                <View style={styles.container}>
+                    <View style={styles.containerImg}>
+                        <Image
+                            source={require('../../img/zapatos/shoeDefault.png')}
+                            style={styles.zapatoImg}
+                        />
+                    </View>
+                    <View style={styles.containerText}>
+                        <View style={styles.text1}>
+                            <Text texto='Air Jordan 1' fontSize={16} />
+                            <Text texto='Zapato Unisex' color='#7D7D7D' />
+                        </View>
+                        <View style={styles.text2}>
+                            <View style={styles.starGrap}>
+                                <Image
+                                    source={require('../../img/icons/iconStar.png')}
+                                />
+                                <Text texto='5' fontSize={15} color='#FFA700' />
+                            </View>
+                            <Text texto='$285' fontSize={16} />
+                        </View>
+                    </View>
+                </View>
+
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+const styles = StyleSheet.create({
+    containerTotal: {
+        width: 220,
+        height: 260,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        padding: 10,
+        marginHorizontal: 10,
+        marginVertical: 15,
+        borderColor: '#F2F2F2',
+        borderWidth: 2,
+    },
+    container: {
+        width: '100%',
+        height: '100%',
+    },
+    containerImg: {
+        width: '100%',
+        height: '60%',
+    },
+    containerText: {
+        borderTopWidth: 3,
+        borderColor: '#1591CC',
+        width: '100%',
+        height: '40%',
+        paddingHorizontal: 10,
+    },
+    zapatoImg: {
+        width: '100%',
+        height: '100%'
+    },
+    text1: {
+        paddingTop: 8,
+        marginBottom: 15,
+    },
+    text2: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+    starGrap: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
