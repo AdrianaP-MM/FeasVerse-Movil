@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingLabelTextInput from 'react-native-floating-label-text-input';
 
-const TextInputC = ({ label, keyboardType = 'default', maxLength = 200, editable = true, secureTextEntry = false }) => {
+/*
+                value={clave}
+                onChangeText={setClave}
+                label="Contraseña"
+                placeholder="Introduce tu contraseña"
+                secureTextEntry={true} */
+
+const TextInputC = ({ label, keyboardType = 'default', maxLength = 200, editable = true, secureTextEntry = false, setValor, valor }) => {
     const [isFocused, setIsFocused] = useState(false);
 
     const handleFocus = () => {
@@ -14,7 +21,7 @@ const TextInputC = ({ label, keyboardType = 'default', maxLength = 200, editable
     };
 
     return (
-        <View style={[styles.container, { borderBottomColor: isFocused ? 'black' : '#000000' }]}>
+        <View style={[styles.container, { borderBottomColor: isFocused ? 'black' : '#000000' }, setValor, valor]}>
             <FloatingLabelTextInput
                 placeholder={label}
                 keyboardType={keyboardType}
@@ -27,6 +34,8 @@ const TextInputC = ({ label, keyboardType = 'default', maxLength = 200, editable
                     colorFocused: 'black',
                     colorBlurred: '#000000',
                 }}
+                value={valor}
+                onChangeTextValue={setValor}
             />
         </View>
     );
