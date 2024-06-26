@@ -49,13 +49,13 @@ const Inicio = () => {
                             <View style={styles.colTexto}>
                                 <Text texto={`¿Qué tal ${userName}?`} fontSize={24} color='white' />
                                 <View style={styles.rowGrap}>
-                                    <Text texto='Somos' fontSize={24} color='white' />
+                                    <Text texto='Somos' fontSize={24} color='white' font='TTWeb-Bold'/>
                                     <Image
                                         source={require('../../img/icons/iconZapato.png')}
                                         style={styles.shoeImage}
                                     />
                                 </View>
-                                <Text texto='¡FeasVerse!' fontSize={24} color='white' />
+                                <Text texto='¡FeasVerse!' fontSize={24} color='white' font='TTWeb-Bold'/>
                             </View>
                             <View style={styles.colImg}>
                                 <Image

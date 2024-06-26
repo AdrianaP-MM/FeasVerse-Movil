@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-export default function TextC({ texto = 'Indefinido', font, fontSize = 12, color = 'black', textAlign = 'left', }) {
+export default function TextC({ texto = 'Indefinido', font = 'TTWeb-Regular', fontSize = 12, color = 'black', textAlign = 'left', }) {
     const textStyle = {
         fontFamily: font, // Si no se proporciona `font`, se usará la fuente predeterminada del sistema
         fontSize: fontSize, // Si no se proporciona `fontSize`, se usará 12

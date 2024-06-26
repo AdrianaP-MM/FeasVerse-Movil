@@ -10,6 +10,9 @@ import Carrito from './src/screens/configuraciones/Carrito';
 import LogIn from './src/screens/Login/Login';
 import Inicio from './src/screens/Zapatos/Inicio';
 import Zapatos from './src/screens/Zapatos/Zapatos';
+import { useFonts } from 'expo-font';
+import { useEffect, useState } from 'react';
+import Registrarse from './src/screens/Login/Registrarse';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +31,31 @@ const MainScreen = ({ navigation }) => {
 };
 
 const App = () => {
+    const [appIsReady, setAppIsReady] = useState(false);
+    const [fontsLoaded] = useFonts({
+        'TTWeb-Black': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Black.ttf'),
+        'TTWeb-Bold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Bold.ttf'),
+        'TTWeb-Regular': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Regular.ttf'),
+        'TTWeb-Light': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Light.ttf'),
+    });
+
+    useEffect(() => {
+        async function prepareApp() {
+            try {
+                if (fontsLoaded) {
+                    setAppIsReady(true);
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        prepareApp();
+    }, [fontsLoaded]);
+
+    if (!appIsReady) {
+        return null;
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="App" screenOptions={{ headerShown: false }}>
@@ -40,6 +68,7 @@ const App = () => {
                 <Stack.Screen name="LogIn" component={LogIn} />
                 <Stack.Screen name="Inicio" component={Inicio} />
                 <Stack.Screen name="Zapatos" component={Zapatos} />
+                <Stack.Screen name="Registrarse" component={Registrarse} />
             </Stack.Navigator>
         </NavigationContainer>
     );
