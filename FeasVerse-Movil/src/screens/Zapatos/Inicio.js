@@ -26,7 +26,7 @@ const Inicio = () => {
             }
         } catch (error) {
             console.error(error);
-            Alert.alert('Error', 'Hubo un problema al leer el usuario');
+            //Alert.alert('Error', 'Hubo un problema al leer el usuario');
         }
     };
 

@@ -9,6 +9,7 @@ import Message from './src/screens/restablecer/Message';
 import Carrito from './src/screens/configuraciones/Carrito';
 import LogIn from './src/screens/Login/Login';
 import Inicio from './src/screens/Zapatos/Inicio';
+import Zapatos from './src/screens/Zapatos/Zapatos';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const MainScreen = ({ navigation }) => {
             <Button title="Go to Carrito" onPress={() => navigation.navigate('Carrito')} />
             <Button title="Go to LogIn" onPress={() => navigation.navigate('LogIn')} />
             <Button title="Go to Inicio" onPress={() => navigation.navigate('Inicio')} />
+            <Button title="Go to Zapatos" onPress={() => navigation.navigate('Zapatos')} />
         </View>
     );
 };
@@ -37,6 +39,7 @@ const App = () => {
                 <Stack.Screen name="Carrito" component={Carrito} />
                 <Stack.Screen name="LogIn" component={LogIn} />
                 <Stack.Screen name="Inicio" component={Inicio} />
+                <Stack.Screen name="Zapatos" component={Zapatos} />
             </Stack.Navigator>
         </NavigationContainer>
     );
