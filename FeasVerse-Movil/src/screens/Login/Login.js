@@ -13,15 +13,15 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
 
     // Función para cambiar de pantalla
     const handelViewInicio = () => {
-        navigation.navigate('Inicio'); // Navegamos a la pantalla 'NewPassword'
+        navigation.navigate('Inicio'); 
     };
 
     const handelViewRestablecer = () => {
-        navigation.navigate('Correo'); // Navegamos a la pantalla 'NewPassword'
+        navigation.navigate('Correo'); 
     };
 
     const handelViewRegistrar = () => {
-        navigation.navigate('Inicio'); // Navegamos a la pantalla 'NewPassword'
+        navigation.navigate('Registrarse'); 
     };
 
     useEffect(() => {
@@ -48,7 +48,6 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
         const formData = new FormData();
         formData.append('correo', correo)
         formData.append('clave', clave)
-        console.log('Datos enviados:', { correo, clave });
 
         //Realizar la petición http 
         const fetchApi = await fetch(url, {
@@ -57,14 +56,12 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
         })
         const datos = await fetchApi.json();
         if (datos.status) {
-            Alert.alert('Yei', datos.error);
-            console.log('SIIIIIIIIIIIIIII');
+            Alert.alert('Has iniciado correctamente sesion');
             handelViewInicio();
         }
         else {
             console.log(datos);
-            Alert.alert('Error sesion', datos.error);
-            console.log('NOOOOOOOOOO')
+            Alert.alert('Error de sesion', datos.error);
         }
     };
 
