@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 import CustomTextInput from '../../components/inputs/CustomTextInput '; // Importamos nuestro componente CustomTextInput
 
 const Correo = ({ navigation }) => {
@@ -9,9 +10,43 @@ const Correo = ({ navigation }) => {
     const [isValidEmail, setIsValidEmail] = useState(false); // Estado para verificar si el correo es válido
 
     // Función para enviar el código de verificación al correo ingresado
-    const handleSendCode = () => {
-        console.log('Enviar código a:', email); // Mostrar el correo al que se enviará el código en la consola
-        navigation.navigate('Code', { email }); // Navegar a la pantalla 'Code' y pasar el email como parámetro
+    const handleSendCode = async () => {
+        const formData = new FormData();
+        formData.append('correo_electronico_paso1', email);
+
+        try {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=searchMail`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (data.status) {
+                const form2 = new FormData();
+                form2.append('correo_electronico_paso1', email);
+                form2.append('nombre_destinatario', data.dataset.nombre_trabajador);
+
+                const response2 = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=enviarCodigoRecuperacion`, {
+                    method: 'POST',
+                    body: form2,
+                });
+
+                const data2 = await response2.json();
+
+                if (data2.status) {
+                    Alert.alert('Éxito', 'Se ha enviado correctamente al correo electrónico, ingrese el código enviado');
+                    navigation.navigate('Code', { email, codigo: data2.codigo, id: data.dataset.id_cliente });
+                } else {
+                    Alert.alert('Error', data2.error);
+                }
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Hubo un problema al enviar el código.');
+        }
     };
 
     // Función para validar el formato del correo electrónico utilizando una expresión regular
@@ -28,27 +63,21 @@ const Correo = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            {/* Botón para retroceder */}
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back" size={24} color="#1591CC" />
             </TouchableOpacity>
             <View style={styles.content}>
                 <View>
-                    {/* Título y subtítulo */}
                     <Text style={styles.title}>Restablecer contraseña</Text>
-                    <Text style={styles.subtitle}>
-                        No te preocupes, te ayudaremos a restablecer tu contraseña. Ingresa tu correo electrónico para mandar un código de restablecimiento.
-                    </Text>
+                    <Text style={styles.subtitle}>No te preocupes, te ayudaremos a restablecer tu contraseña. Ingresa tu correo electrónico para mandar un código de restablecimiento.</Text>
                     <Text style={styles.label}>Correo electrónico</Text>
                 </View>
-                {/* Usamos CustomTextInput en lugar de TextInput */}
                 <CustomTextInput
                     placeholder="Ingrese tu correo electrónico"
                     keyboardType="email-address"
                     value={email}
-                    onChangeText={handleEmailChange} // Proporcionamos la función para manejar el cambio en el texto
+                    onChangeText={handleEmailChange}
                 />
-                {/* Botón para enviar el código, se deshabilita si el email no es válido */}
                 <TouchableOpacity
                     style={[styles.button, !isValidEmail && styles.buttonDisabled]}
                     onPress={handleSendCode}
@@ -57,11 +86,9 @@ const Correo = ({ navigation }) => {
                     <Text style={styles.buttonText}>Mandar código</Text>
                 </TouchableOpacity>
             </View>
-            {/* Texto para regresar */}
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backTextContainer}>
                 <Text style={styles.backText}>Regresar</Text>
             </TouchableOpacity>
-            {/* Barra de estado de la aplicación */}
             <StatusBar style="auto" />
         </View>
     );
@@ -96,19 +123,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#1591CC',
         marginBottom: 10,
-        textAlign: 'start', // Ajustado a 'start'
+        textAlign: 'start',
     },
     subtitle: {
         fontSize: 16,
         color: '#6c757d',
-        textAlign: 'start', // Ajustado a 'start'
+        textAlign: 'start',
         marginBottom: 20,
     },
     label: {
         fontSize: 16,
         color: '#1591CC',
         marginBottom: 5,
-        textAlign: 'start', // Ajustado a 'start'
+        textAlign: 'start',
     },
     button: {
         width: '100%',
@@ -119,7 +146,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     buttonDisabled: {
-        backgroundColor: '#ccc', // Color de fondo cuando el botón está deshabilitado
+        backgroundColor: '#ccc',
     },
     buttonText: {
         color: '#fff',
@@ -138,4 +165,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Correo; // Exportamos el componente Correo para ser utilizado en otras partes de la aplicación
+export default Correo;

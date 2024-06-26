@@ -1,74 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import CustomTextInput from '../../components/inputs/CustomTextInputPassword'; // Importamos nuestro componente CustomTextInput
+import CustomTextInput from '../../components/inputs/CustomTextInput ';
+import { Colors, FontSizes, Config } from '../../utils/constantes'; // Importamos nuestro componente CustomTextInput
 
-const NewPassword = ({ navigation }) => {
+const NewPassword = ({ route, navigation }) => {
     const [password, setPassword] = useState(''); // Estado para almacenar la nueva contraseña
-    const [confirmPassword, setConfirmPassword] = useState(''); // Estado para almacenar la confirmación de la contraseña
-    const [isValidPassword, setIsValidPassword] = useState(false); // Estado para verificar si la contraseña es válida
-
-    useEffect(() => {
-        // Validar las contraseñas cuando cambian
-        setIsValidPassword(password === confirmPassword && validatePassword(password));
-    }, [password, confirmPassword]);
-
-    // Función para restablecer la contraseña
-    const handleResetPassword = () => {
-        console.log('Contraseña restablecida'); // Mostrar mensaje en consola
-        navigation.navigate('Message'); // Navegar a la pantalla 'Message' (probablemente para mostrar un mensaje de éxito)
-    };
-
-    // Función para validar la contraseña
-    const validatePassword = (password) => {
-        // Aquí puedes aplicar tus reglas de validación para la contraseña
-        return password.length >= 6; // Ejemplo: al menos 6 caracteres
-    };
+    const [confirmPassword, setConfirmPassword] = useState(''); // Estado para almacenar la confirmación de la nueva contraseña
+    const { id } = route.params; // Obtenemos el id del parámetro route
 
     // Función para manejar el cambio en el campo de texto de la contraseña
-    const handlePasswordChange = (password) => {
-        setPassword(password); // Actualizar el estado 'password' con el valor ingresado
+    const handlePasswordChange = (text) => {
+        setPassword(text); // Actualizamos el estado 'password' con el valor ingresado
     };
 
-    // Función para manejar el cambio en el campo de texto de confirmación de contraseña
-    const handleConfirmPasswordChange = (confirmPassword) => {
-        setConfirmPassword(confirmPassword); // Actualizar el estado 'confirmPassword' con el valor ingresado
+    // Función para manejar el cambio en el campo de texto de la confirmación de la contraseña
+    const handleConfirmPasswordChange = (text) => {
+        setConfirmPassword(text); // Actualizamos el estado 'confirmPassword' con el valor ingresado
+    };
+
+    // Función para manejar el restablecimiento de la contraseña
+    const handleResetPassword = async () => {
+        if (password !== confirmPassword) {
+            Alert.alert('Error', 'Las contraseñas no coinciden');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('idCliente', id);
+        formData.append('claveCliente', password);
+        formData.append('confirmarCliente', confirmPassword);
+
+        try {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=changePasswordLogin`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (data.status) {
+                Alert.alert('Éxito', 'Contraseña restablecida correctamente');
+                navigation.navigate('Message'); // Navegamos a la pantalla 'Login'
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Hubo un problema al restablecer la contraseña.');
+        }
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                {/* Título y subtítulo */}
-                <Text style={styles.title}>Restablecer contraseña</Text>
-                <Text style={styles.subtitle}>Por favor, ingresa algo que recuerdes.</Text>
-                <Text style={styles.label}>Nueva contraseña</Text>
-                
-                {/* Input para la nueva contraseña */}
+                <View>
+                    <Text style={styles.title}>Restablecer contraseña</Text>
+                    <Text style={styles.subtitle}>Ingresa tu nueva contraseña a continuación.</Text>
+                    <Text style={styles.label}>Nueva contraseña</Text>
+                </View>
                 <CustomTextInput
-                    placeholder="Ingresa tu nueva contraseña"
+                    placeholder="Ingrese tu nueva contraseña"
+                    secureTextEntry
                     value={password}
-                    onChangeText={handlePasswordChange} // Proporcionamos la función para manejar el cambio en el texto
+                    onChangeText={handlePasswordChange}
                 />
-                <Text style={styles.label}>Confirmar contraseña</Text>
-                
-                {/* Input para confirmar la contraseña */}
+                <Text style={styles.label}>Confirmar nueva contraseña</Text>
                 <CustomTextInput
-                    placeholder="Confirma tu contraseña"
+                    placeholder="Confirme su nueva contraseña"
+                    secureTextEntry
                     value={confirmPassword}
-                    onChangeText={handleConfirmPasswordChange} // Proporcionamos la función para manejar el cambio en el texto
+                    onChangeText={handleConfirmPasswordChange}
                 />
-                
-                {/* Botón para restablecer contraseña, se deshabilita si la contraseña no es válida */}
-                <TouchableOpacity
-                    style={[styles.button, !isValidPassword && styles.buttonDisabled]}
-                    onPress={handleResetPassword}
-                    disabled={!isValidPassword}
-                >
+                <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
                     <Text style={styles.buttonText}>Restablecer contraseña</Text>
                 </TouchableOpacity>
             </View>
-            {/* Barra de estado de la aplicación */}
             <StatusBar style="auto" />
         </View>
     );
@@ -80,12 +88,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingHorizontal: 20,
-        justifyContent: 'center',
     },
     content: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'start',
+        paddingHorizontal: 20,
     },
     title: {
         fontSize: 28,
@@ -93,21 +101,18 @@ const styles = StyleSheet.create({
         color: '#1591CC',
         marginBottom: 10,
         textAlign: 'start',
-        width: '100%',
     },
     subtitle: {
         fontSize: 16,
         color: '#6c757d',
         textAlign: 'start',
         marginBottom: 20,
-        width: '100%',
     },
     label: {
         fontSize: 16,
         color: '#1591CC',
         marginBottom: 5,
         textAlign: 'start',
-        width: '100%',
     },
     button: {
         width: '100%',
@@ -115,10 +120,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1591CC',
         borderRadius: 5,
         alignItems: 'center',
-        marginTop: 10,
-    },
-    buttonDisabled: {
-        backgroundColor: '#ccc', // Color de fondo cuando el botón está deshabilitado
+        marginBottom: 20,
     },
     buttonText: {
         color: '#fff',

@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 const Message = ({ navigation }) => {
     // Función para manejar el retorno al inicio de sesión
     const handleReturnToLogin = () => {
-        navigation.navigate('App'); // Navegar de regreso a la pantalla inicial de sesión ('App' podría ser el nombre de la pantalla principal de la aplicación)
+        navigation.navigate('LogIn'); // Navegar de regreso a la pantalla inicial de sesión ('App' podría ser el nombre de la pantalla principal de la aplicación)
     };
 
     return (
