@@ -3,30 +3,29 @@ import { StyleSheet, View, Button, Image, Text, Alert } from 'react-native';
 import TextInputC from '../../components/inputs/Border_Down';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
+
 const logoImg = require("../../img/LogoFeasVerse.png");
 
 const LogIn = ({ logueado, setLogueado }) => {
-
-    const [correo, setCorreo] = useState('');
-    const [clave, setClave] = useState('');
+    const [correo, setCorreo] = useState('fer12@gmail.com');
+    const [clave, setClave] = useState('clave12345');
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
+
     useEffect(() => {
-        if (!fontsLoaded) {
-            loadFonts();
-        }
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Black': require('../../../assets/fonts/TitilliumWeb-Black.ttf'),
+                'Bold': require('../../../assets/fonts/Roboto-Black.ttf'),
+                'Medium': require('../../../assets/fonts/Roboto-Medium.ttf'),
+                'Regular': require('../../../assets/fonts/Roboto-Regular.ttf')
+            });
+
+            setFontsLoaded(true);
+        };
+
+        loadFonts();
     }, []);
-
-    const loadFonts = async () => {
-        await Font.loadAsync({
-            'Black': require('../../../assets/fonts/TitilliumWeb-Black.ttf'),
-            'Bold': require('../../../assets/fonts/Roboto-Black.ttf'),
-            'Medium': require('../../../assets/fonts/Roboto-Medium.ttf'),
-            'Regular': require('../../../assets/fonts/Roboto-Regular.ttf')
-        });
-
-        setFontsLoaded(true);
-    }
 
     if (!fontsLoaded) {
         return <View />;
@@ -35,37 +34,44 @@ const LogIn = ({ logueado, setLogueado }) => {
     const handlerLogin = async () => {
         let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logIn`;
         const formData = new FormData();
-        formData.append('correo', correo);
-        formData.append('clave', clave);
-    
-        try {
-            const fetchApi = await fetch(url, {
-                method: 'POST',
-                body: formData
-            });
-            
-            // Verifica si la respuesta es HTML
-            const textResponse = await fetchApi.text();
-            if (textResponse.startsWith('<')) {
-                console.error('La respuesta es HTML:', textResponse);
-                Alert.alert('Error de servidor', 'La respuesta del servidor no es válida.');
-                return;
-            }
-    
-            // Intenta convertir a JSON
-            const datos = JSON.parse(textResponse);
-            if (datos.status) {
-                setLogueado(!logueado);
-            } else {
-                console.log(datos);
-                Alert.alert('Error sesión', datos.error);
-            }
-        } catch (error) {
-            console.error('Error al realizar la solicitud:', error);
-            Alert.alert('Error', 'Hubo un problema con la solicitud.');
+        formData.append('correo', correo)
+        formData.append('clave', clave)
+        console.log('Datos enviados:', { correo, clave });
+
+        //Realizar la petición http 
+        const fetchApi = await fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        const datos = await fetchApi.json();
+        if (datos.status) {
+            Alert.alert('Yei', datos.error);
         }
+        else {
+            console.log(datos);
+            // Alert the user about the error
+            Alert.alert('Error sesion', datos.error);
+        }
+
+
+    };
+
+    const handleLogOut = async () => {
+        const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
+        //Realizar la petición http 
+        const fetchApi = await fetch(url)
+        const datos = await fetchApi.json();
+        if (datos.status) {
+            setLogueado(false)
+        }
+        else {
+            console.log(datos);
+            // Alert the user about the error
+            Alert.alert('Error sesion', datos.error);
+        }
+
+
     }
-    
 
     return (
         <View style={styles.container}>
@@ -77,24 +83,30 @@ const LogIn = ({ logueado, setLogueado }) => {
                 Inicio de sesión
             </Text>
             <TextInputC
+                label="Correo electrónico"
                 value={correo}
                 onChangeText={setCorreo}
-                label="Correo electrónico"
                 keyboardType="email-address"
                 placeholder="Introduce tu correo"
+                autoCapitalize="none"
             />
             <TextInputC
                 value={clave}
                 onChangeText={setClave}
                 label="Contraseña"
-                maxLength={20}
-                secureTextEntry={true}
                 placeholder="Introduce tu contraseña"
+                secureTextEntry={true}
             />
             <View style={styles.btnContainer}>
                 <Button
                     title="Iniciar Sesión"
                     onPress={handlerLogin}
+                />
+            </View>
+            <View style={styles.btnContainer}>
+                <Button
+                    title="Cerrar"
+                    onPress={handleLogOut}
                 />
             </View>
             <Text style={styles.text}>
