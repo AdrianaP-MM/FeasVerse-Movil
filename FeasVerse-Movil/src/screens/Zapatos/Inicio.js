@@ -17,51 +17,54 @@ const Inicio = () => {
     const [zapatos, setZapatos] = useState([]);
 
     useEffect(() => {
-        //readUser();
-        //fetchCardData();
+        readUser();
     }, []);
 
-    const fetchCardData = async () => {
+    const fillData = async ({ php, accion, method, formData }) => {
         try {
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/zapatos.php?action=readAllEspecial`);
+            // Validar que los parámetros requeridos estén definidos
+            if (!php || !accion) {
+                throw new Error('Parámetros php, accion son obligatorios.');
+            }
+
+            let response;
+
+            if (method !== 'POST') {
+                // Petición GET si method no es POST
+                response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/${php}.php?action=${accion}`);
+            } else {
+                // Petición POST si method es POST
+                if (!formData) {
+                    throw new Error('formData es obligatorio para el método POST.');
+                }
+                response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/${php}.php?action=${accion}`, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
             const result = await response.json();
 
             if (result.status) {
-                setZapatos(result.dataset);
+                return result.dataset; // Retorna el dataset si la respuesta es exitosa
             } else if (result.message === 'Acceso denegado') {
-                setIsAuthenticated(false);
+                setIsAuthenticated(false); // Manejo específico de "Acceso denegado"
                 showModal('Necesitas iniciar sesión para ver los zapatos');
+                return false;
             } else {
+                // Manejo de otros errores
                 showModal(result.message);
+                return false;
             }
         } catch (error) {
-            showModal('Error al cargar los datos de los zapatos');
-            console.error(error);
-        }
-    };
-
-    const [userName, setUserName] = useState('');
-
-    // Función para leer el nombre del cliente
-    const readUser = async () => {
-        try {
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`, {
-                method: 'GET'
-            });
-
-            const text = await response.text(); // Obtener el texto de la respuesta
-            console.log('Response text:', text); // Mostrar el texto completo de la respuesta
-
-            const data = JSON.parse(text);
-
-            if (data.status) {
-                setUserName(data.name.nombre_cliente);
+            // Manejo de errores generales
+            if (error instanceof TypeError) {
+                showModal('Error de red: Por favor, verifica tu conexión.');
             } else {
-                Alert.alert('Error', data.error);
+                showModal(`Error: ${error.message}`);
             }
-        } catch (error) {
-            console.error(error);
-            Alert.alert('Error', error.error);
+            console.error('Error en fillData:', error);
+            return false;
         }
     };
 
@@ -72,6 +75,24 @@ const Inicio = () => {
 
     const closeModal = () => {
         setModalVisible(false);
+    };
+    const [userName, setUserName] = useState('');
+
+    // Función para leer el nombre del cliente
+    const readUser = async () => {
+        try {
+            // Llama a fillData con los parámetros correctos y espera la respuesta
+            const response = await fillData({ php: 'cliente', accion: 'readCliente' });
+
+            if (response) {
+                setUserName(response.nombre_cliente);
+            } else {
+                Alert.alert('Error', 'No se pudo obtener el nombre del cliente.');
+            }
+        } catch (error) {
+            console.error('Error en readUser:', error);
+            Alert.alert('Error', 'Hubo un error al intentar obtener el nombre del cliente.');
+        }
     };
 
     // Calcular altura dinámica para porcentajes
@@ -157,6 +178,19 @@ const Inicio = () => {
                     </View>
                 </View>
             </ScrollView>
+            <Modal
+                visible={modalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={closeModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text>{modalMessage}</Text>
+                        <Button title="Cerrar" onPress={closeModal} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -252,6 +286,27 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         paddingLeft: 20,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
 });
 
