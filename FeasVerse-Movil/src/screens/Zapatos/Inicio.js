@@ -6,12 +6,16 @@ import CardMarca from '../../components/zapatos/cardMarca';
 import CardZapato from '../../components/zapatos/cardZapato';
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
-import { fillData } from '../../utils/fillData'; 
+//import { fillData } from '../../utils/fillData'; 
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
 const Inicio = () => {
-    const [zapatos, setZapatos] = useState([]);
+    return (
+        <View></View>
+    );
+
+    /*const [zapatos, setZapatos] = useState([]);
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
@@ -127,10 +131,11 @@ const Inicio = () => {
             </ScrollView>
         </View>
     );
+    */
 };
 
 const styles = StyleSheet.create({
-    containerTotal: {
+    /*containerTotal: {
         flex: 1,
         backgroundColor: '#FAFBFF',
         alignItems: 'center',
@@ -148,31 +153,31 @@ const styles = StyleSheet.create({
         backgroundColor: '#1591CC',
         justifyContent: 'flex-start',
         alignItems: 'center',
-    },
-    f1Header: {
+    },*/
+    /*f1Header: {
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: '7%',
-    },
+    },*//*
     colTexto: {
         width: '50%',
-    },
-    rowGrap: {
+    },*/
+    /*rowGrap: {
         width: '100%',
         flexDirection: 'row',
         paddingVertical: 5,
         alignItems: 'center',
         justifyContent: 'flex-start',
-    },
+    },*//*
     shoeImage: {
         marginLeft: 20,
         width: 40,
         height: 39,
-    },
+    },*//*
     colImg: {
         width: '50%',
-    },
+    },*//*
     f1Body: {
         width: '93%',
         alignItems: 'flex-start',
@@ -194,7 +199,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 5,
-    },
+    },*//*
     cardHeader: {
         width: '100%',
         marginBottom: 35,
@@ -241,7 +246,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-    },
+    },*/
 });
 
 export default Inicio;

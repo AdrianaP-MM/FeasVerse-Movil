@@ -1,4 +1,4 @@
-import { Config } from './constantes'; // Asegúrate de importar Config desde donde corresponda
+/*import { Config } from './utils/constantes'; // Asegúrate de importar Config desde donde corresponda
 
 export const fillData = async ({ php, accion, method, formData }) => {
     try {
@@ -40,3 +40,4 @@ export const fillData = async ({ php, accion, method, formData }) => {
         return { error: error.message };
     }
 };
+*/
