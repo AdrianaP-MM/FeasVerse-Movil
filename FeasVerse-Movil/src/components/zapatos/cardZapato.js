@@ -15,7 +15,7 @@ export default function CardCita({ accionCard }) {
                     </View>
                     <View style={styles.containerText}>
                         <View style={styles.text1}>
-                            <Text texto='Air Jordan 1' fontSize={16} />
+                            <Text texto='Air Jordan 1' fontSize={16} font='TTWeb-Bold'/>
                             <Text texto='Zapato Unisex' color='#7D7D7D' />
                         </View>
                         <View style={styles.text2}>
@@ -23,9 +23,9 @@ export default function CardCita({ accionCard }) {
                                 <Image
                                     source={require('../../img/icons/iconStar.png')}
                                 />
-                                <Text texto='5' fontSize={15} color='#FFA700' />
+                                <Text texto='5' fontSize={15} color='#FFA700' font='TTWeb-Bold'/>
                             </View>
-                            <Text texto='$285' fontSize={16} />
+                            <Text texto='$285' fontSize={16} font='TTWeb-Bold' />
                         </View>
                     </View>
                 </View>

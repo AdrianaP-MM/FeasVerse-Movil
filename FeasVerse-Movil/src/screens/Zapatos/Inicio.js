@@ -49,7 +49,7 @@ const Inicio = () => {
                             <View style={styles.colTexto}>
                                 <Text texto={`¿Qué tal ${userName}?`} fontSize={24} color='white' />
                                 <View style={styles.rowGrap}>
-                                    <Text texto='Somos' fontSize={24} color='white' font='TTWeb-light'/>
+                                    <Text texto='Somos' fontSize={24} color='white' font='TTWeb-Bold'/>
                                     <Image
                                         source={require('../../img/icons/iconZapato.png')}
                                         style={styles.shoeImage}
@@ -64,7 +64,7 @@ const Inicio = () => {
                             </View>
                         </View>
                         <View style={styles.f1Body}>
-                            <Text texto='¿Qué quieres hacer hoy?' fontSize={18} color='white' />
+                            <Text texto='¿Qué quieres hacer hoy?' fontSize={18} color='white' font='TTWeb-Light'/>
                             <View style={styles.rowGrap}>
                                 <Pastilla text='Ir de compras' />
                                 <Pastilla text='¡Ver los productos!' />
@@ -73,7 +73,7 @@ const Inicio = () => {
                         </View>
                         <View style={styles.cardContainer}>
                             <View style={styles.cardHeader}>
-                                <Text texto='¡INCREIBLE! haz realizado un total de 69 pedidos de nuestros productos ¡en este mes de mayo!' fontSize={13} />
+                                <Text texto='¡INCREIBLE! haz realizado un total de 69 pedidos de nuestros productos ¡en este mes de mayo!' fontSize={13} font='TTWeb-SemiBold'/>
                             </View>
                             <View style={styles.cardBody}>
                                 <Text texto='Par más vendido en este mes' color='#252525' />
@@ -81,7 +81,7 @@ const Inicio = () => {
                                     source={require('../../img/zapatos/shoeDefault.png')}
                                     style={styles.shoeImg}
                                 />
-                                <Text texto='Conseguir el mio >>' color='#0066FF' fontSize={15} textAlign='center' />
+                                <Text texto='Conseguir el mio >>' color='#0066FF' fontSize={15} textAlign='center' font='TTWeb-Black'/>
                             </View>
                         </View>
                     </View>
@@ -89,7 +89,7 @@ const Inicio = () => {
                 <View style={styles.fila2}>
                     <View style={styles.containerScroll}>
                         <View style={styles.textContainer}>
-                            <Text texto='Nuestras mejores marcas asociadas' fontSize={15} />
+                            <Text texto='Nuestras mejores marcas asociadas' fontSize={15} font='TTWeb-SemiBold'/>
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
                             <CardMarca />
@@ -100,7 +100,7 @@ const Inicio = () => {
                     </View>
                     <View style={styles.containerScroll}>
                         <View style={styles.textContainer}>
-                            <Text texto='Selección especial de nuestro equipo' fontSize={15} />
+                            <Text texto='Selección especial de nuestro equipo' fontSize={15} font='TTWeb-SemiBold'/>
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
                             <CardZapato />

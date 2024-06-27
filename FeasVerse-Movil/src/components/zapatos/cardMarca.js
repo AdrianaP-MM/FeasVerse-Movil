@@ -2,10 +2,10 @@ import React from 'react';
 import Text from '../utils/Text';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
-export default function CardCita({ accionCard }) {
+export default function CardCita({ accionCard, square = 150 }) {
     return (
         <TouchableOpacity onPress={accionCard}>
-            <View style={styles.containerTotal}>
+            <View style={[styles.containerTotal, { width: square, height: square }]}>
                 <Image
                     source={require('../../img/marcas/marca.png')}
                     style={styles.marcaImg}
@@ -17,8 +17,6 @@ export default function CardCita({ accionCard }) {
 
 const styles = StyleSheet.create({
     containerTotal: {
-        width: 150,
-        height: 150,
         backgroundColor: 'white',
         borderRadius: 15,
         padding: 15,
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
         borderColor: '#F2F2F2',
         borderWidth: 2,
     },
-    marcaImg:{
+    marcaImg: {
         width: '100%',
         height: '100%'
     },
