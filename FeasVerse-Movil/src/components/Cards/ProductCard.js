@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onEdit, onDelete }) => {
     return (
         <View style={styles.productContainer}>
             <Image source={{ uri: product.image }} style={styles.productImage} />
@@ -15,10 +15,10 @@ const ProductCard = ({ product }) => {
                 <Text style={styles.unitPrice}>Precio unitario del zapato: ${product.price}</Text>
             </View>
             <View style={styles.iconContainer}>
-                <TouchableOpacity style={styles.editIcon}>
+                <TouchableOpacity style={styles.editIcon} onPress={onEdit}>
                     <Ionicons name="pencil" size={24} color="#007BFF" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.trashIcon}>
+                <TouchableOpacity style={styles.trashIcon} onPress={onDelete}>
                     <Ionicons name="trash" size={24} color="#007BFF" />
                 </TouchableOpacity>
             </View>

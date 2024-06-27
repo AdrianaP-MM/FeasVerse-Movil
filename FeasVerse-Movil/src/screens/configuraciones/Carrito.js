@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, Alert, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import * as Constantes from '../../utils/constantes';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 import ProductCard from '../../components/Cards/ProductCard'; // Importa el componente ProductCard
 
 const { width } = Dimensions.get('window');
@@ -12,6 +12,10 @@ const Carrito = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(true); // Estado para autenticación
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [quantity, setQuantity] = useState('');
 
     useEffect(() => {
         fetchCartData();
@@ -19,7 +23,7 @@ const Carrito = ({ navigation }) => {
 
     const fetchCartData = async () => {
         try {
-            const response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/zapatos.php?action=readAll`);
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=readAll`);
             const result = await response.json();
             if (result.status) {
                 setProducts(result.dataset);
@@ -46,7 +50,7 @@ const Carrito = ({ navigation }) => {
             const formData = new FormData();
             formData.append('idDetallesPedido', id);
 
-            const response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/zapatos.php?action=deleteRow`, {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=deleteRow`, {
                 method: 'POST',
                 body: formData
             });
@@ -64,12 +68,16 @@ const Carrito = ({ navigation }) => {
     };
 
     const handleUpdateQuantity = async (id, quantity) => {
+        if (!quantity || isNaN(quantity) || quantity <= 0) {
+            showModal('Por favor, introduce una cantidad válida.');
+            return;
+        }
         try {
             const formData = new FormData();
             formData.append('idDetallesPedido', id);
             formData.append('cantidad', quantity);
 
-            const response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/zapatos.php?action=updateRow`, {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=updateRow`, {
                 method: 'POST',
                 body: formData
             });
@@ -77,6 +85,7 @@ const Carrito = ({ navigation }) => {
             const result = await response.json();
             if (result.status) {
                 fetchCartData();
+                closeEditModal();
             } else {
                 showModal(result.message);
             }
@@ -96,7 +105,7 @@ const Carrito = ({ navigation }) => {
             const formData = new FormData();
             formData.append('precio_total', total);
 
-            const response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/zapatos.php?action=update`, {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=update`, {
                 method: 'POST',
                 body: formData
             });
@@ -122,6 +131,25 @@ const Carrito = ({ navigation }) => {
         setModalVisible(false);
     };
 
+    const openEditModal = (product) => {
+        setSelectedProduct(product);
+        setQuantity(product.cantidad_pedido.toString());
+        setEditModalVisible(true);
+    };
+
+    const closeEditModal = () => {
+        setEditModalVisible(false);
+    };
+
+    const openDeleteModal = (product) => {
+        setSelectedProduct(product);
+        setDeleteModalVisible(true);
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModalVisible(false);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
@@ -137,15 +165,21 @@ const Carrito = ({ navigation }) => {
             <View style={styles.headerLine} />
             <ScrollView style={styles.scrollView}>
                 {products.map(product => (
-                    <ProductCard key={product.id_detalles_pedido} product={{
-                        image: product.foto_detalle_zapato,
-                        name: product.nombre_zapato,
-                        gender: product.genero,
-                        size: product.num_talla,
-                        color: product.nombre_color,
-                        quantity: product.cantidad_pedido,
-                        price: product.precio_unitario_zapato
-                    }} />
+                    <ProductCard
+                        key={product.id_detalles_pedido}
+                        product={{
+                            id: product.id_detalles_pedido,
+                            image: product.foto_detalle_zapato,
+                            name: product.nombre_zapato,
+                            gender: product.genero,
+                            size: product.num_talla,
+                            color: product.nombre_color,
+                            quantity: product.cantidad_pedido,
+                            price: product.precio_unitario_zapato
+                        }}
+                        onEdit={() => openEditModal(product)}
+                        onDelete={() => openDeleteModal(product)}
+                    />
                 ))}
             </ScrollView>
             <View style={styles.totalContainer}>
@@ -180,6 +214,74 @@ const Carrito = ({ navigation }) => {
                             >
                                 <Text style={styles.textStyle}>Iniciar Sesión</Text>
                             </Pressable>
+                        )}
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={editModalVisible}
+                onRequestClose={closeEditModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Editar cantidad</Text>
+                        {selectedProduct && (
+                            <>
+                                <Text>Producto: {selectedProduct.nombre_zapato}</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    keyboardType="numeric"
+                                    value={quantity}
+                                    onChangeText={setQuantity}
+                                    placeholder="Cantidad"
+                                />
+                                <Pressable
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => handleUpdateQuantity(selectedProduct.id_detalles_pedido, quantity)}
+                                >
+                                    <Text style={styles.textStyle}>Actualizar</Text>
+                                </Pressable>
+                                <Pressable
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={closeEditModal}
+                                >
+                                    <Text style={styles.textStyle}>Cancelar</Text>
+                                </Pressable>
+                            </>
+                        )}
+                    </View>
+                </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={deleteModalVisible}
+                onRequestClose={closeDeleteModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>¿Estás seguro de que quieres eliminar este producto?</Text>
+                        {selectedProduct && (
+                            <>
+                                <Text>Producto: {selectedProduct.nombre_zapato}</Text>
+                                <Pressable
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => {
+                                        handleDelete(selectedProduct.id_detalles_pedido);
+                                        closeDeleteModal();
+                                    }}
+                                >
+                                    <Text style={styles.textStyle}>Eliminar</Text>
+                                </Pressable>
+                                <Pressable
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={closeDeleteModal}
+                                >
+                                    <Text style={styles.textStyle}>Cancelar</Text>
+                                </Pressable>
+                            </>
                         )}
                     </View>
                 </View>
@@ -302,6 +404,16 @@ const styles = StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
+        textAlign: 'center',
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: '100%',
+        marginBottom: 10,
+        paddingHorizontal: 10,
         textAlign: 'center',
     },
 });
