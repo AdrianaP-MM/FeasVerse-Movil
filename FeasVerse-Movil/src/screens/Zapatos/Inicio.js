@@ -114,7 +114,6 @@ const Inicio = () => {
                             {zapatos.map(zapato => (
                                 <CardZapato key={zapato.id_zapato}
                                     zapato={{
-                                        zapatoImg: zapato.nombre_zapato,
                                         nombre_zapato: zapato.nombre_zapato,
                                         genero_zapato: zapato.genero_zapato,
                                         estrellas: zapato.estrellas,

@@ -9,9 +9,10 @@ export default function CardCita({ accionCard, zapatoData }) {
                 <View style={styles.container}>
                     <View style={styles.containerImg}>
                         <Image
-                            source={{ uri: zapatoData.foto_detalle_zapato }}
+                            source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${zapatoData.foto_detalle_zapato}` }}
                             style={styles.zapatoImg}
                         />
+
                     </View>
                     <View style={styles.containerText}>
                         <View style={styles.text1}>
