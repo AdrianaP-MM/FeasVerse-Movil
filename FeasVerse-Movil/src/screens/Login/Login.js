@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
         marginLeft: 5,
-        textDecorationLine: 'underline',
     },
     text1: {
         color: Colors.pass,
