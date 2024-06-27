@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, View, Image, Alert, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, Alert, ScrollView, Dimensions, Modal } from 'react-native';
 import Text from '../../components/utils/Text';
 import Pastilla from '../../components/buttons/Pastilla';
 import CardMarca from '../../components/zapatos/cardMarca';
@@ -10,6 +10,36 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
 const Inicio = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(true); // Estado para autenticación
+
+    const [zapatos, setZapatos] = useState([]);
+
+    useEffect(() => {
+        //readUser();
+        //fetchCardData();
+    }, []);
+
+    const fetchCardData = async () => {
+        try {
+            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/zapatos.php?action=readAllEspecial`);
+            const result = await response.json();
+
+            if (result.status) {
+                setZapatos(result.dataset);
+            } else if (result.message === 'Acceso denegado') {
+                setIsAuthenticated(false);
+                showModal('Necesitas iniciar sesión para ver los zapatos');
+            } else {
+                showModal(result.message);
+            }
+        } catch (error) {
+            showModal('Error al cargar los datos de los zapatos');
+            console.error(error);
+        }
+    };
+
     const [userName, setUserName] = useState('');
 
     // Función para leer el nombre del cliente
@@ -18,21 +48,31 @@ const Inicio = () => {
             const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`, {
                 method: 'GET'
             });
-            const data = await response.json();
+
+            const text = await response.text(); // Obtener el texto de la respuesta
+            console.log('Response text:', text); // Mostrar el texto completo de la respuesta
+
+            const data = JSON.parse(text);
+
             if (data.status) {
                 setUserName(data.name.nombre_cliente);
             } else {
-                //Alert.alert('Error', data.error);
+                Alert.alert('Error', data.error);
             }
         } catch (error) {
             console.error(error);
-            //Alert.alert('Error', 'Hubo un problema al leer el usuario');
+            Alert.alert('Error', error.error);
         }
     };
 
-    useEffect(() => {
-        readUser();
-    }, []);
+    const showModal = (message) => {
+        setModalMessage(message);
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
@@ -49,13 +89,13 @@ const Inicio = () => {
                             <View style={styles.colTexto}>
                                 <Text texto={`¿Qué tal ${userName}?`} fontSize={24} color='white' />
                                 <View style={styles.rowGrap}>
-                                    <Text texto='Somos' fontSize={24} color='white' font='TTWeb-Bold'/>
+                                    <Text texto='Somos' fontSize={24} color='white' font='TTWeb-Bold' />
                                     <Image
                                         source={require('../../img/icons/iconZapato.png')}
                                         style={styles.shoeImage}
                                     />
                                 </View>
-                                <Text texto='¡FeasVerse!' fontSize={24} color='white' font='TTWeb-Bold'/>
+                                <Text texto='¡FeasVerse!' fontSize={24} color='white' font='TTWeb-Bold' />
                             </View>
                             <View style={styles.colImg}>
                                 <Image
@@ -64,7 +104,7 @@ const Inicio = () => {
                             </View>
                         </View>
                         <View style={styles.f1Body}>
-                            <Text texto='¿Qué quieres hacer hoy?' fontSize={18} color='white' font='TTWeb-Light'/>
+                            <Text texto='¿Qué quieres hacer hoy?' fontSize={18} color='white' font='TTWeb-Light' />
                             <View style={styles.rowGrap}>
                                 <Pastilla text='Ir de compras' />
                                 <Pastilla text='¡Ver los productos!' />
@@ -73,7 +113,7 @@ const Inicio = () => {
                         </View>
                         <View style={styles.cardContainer}>
                             <View style={styles.cardHeader}>
-                                <Text texto='¡INCREIBLE! haz realizado un total de 69 pedidos de nuestros productos ¡en este mes de mayo!' fontSize={13} font='TTWeb-SemiBold'/>
+                                <Text texto='¡INCREIBLE! haz realizado un total de 69 pedidos de nuestros productos ¡en este mes de mayo!' fontSize={13} font='TTWeb-SemiBold' />
                             </View>
                             <View style={styles.cardBody}>
                                 <Text texto='Par más vendido en este mes' color='#252525' />
@@ -81,7 +121,7 @@ const Inicio = () => {
                                     source={require('../../img/zapatos/shoeDefault.png')}
                                     style={styles.shoeImg}
                                 />
-                                <Text texto='Conseguir el mio >>' color='#0066FF' fontSize={15} textAlign='center' font='TTWeb-Black'/>
+                                <Text texto='Conseguir el mio >>' color='#0066FF' fontSize={15} textAlign='center' font='TTWeb-Black' />
                             </View>
                         </View>
                     </View>
@@ -89,7 +129,7 @@ const Inicio = () => {
                 <View style={styles.fila2}>
                     <View style={styles.containerScroll}>
                         <View style={styles.textContainer}>
-                            <Text texto='Nuestras mejores marcas asociadas' fontSize={15} font='TTWeb-SemiBold'/>
+                            <Text texto='Nuestras mejores marcas asociadas' fontSize={15} font='TTWeb-SemiBold' />
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
                             <CardMarca />
@@ -100,13 +140,19 @@ const Inicio = () => {
                     </View>
                     <View style={styles.containerScroll}>
                         <View style={styles.textContainer}>
-                            <Text texto='Selección especial de nuestro equipo' fontSize={15} font='TTWeb-SemiBold'/>
+                            <Text texto='Selección especial de nuestro equipo' fontSize={15} font='TTWeb-SemiBold' />
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
-                            <CardZapato />
-                            <CardZapato />
-                            <CardZapato />
-                            <CardZapato />
+                            {zapatos.map(zapato => (
+                                <CardZapato key={zapato.id_zapato}
+                                    zapato={{
+                                        zapatoImg: zapato.nombre_zapato,
+                                        nombre_zapato: zapato.nombre_zapato,
+                                        genero_zapato: zapato.genero_zapato,
+                                        estrellas: zapato.estrellas,
+                                        precio_unitario_zapato: zapato.precio_unitario_zapato,
+                                    }} />
+                            ))}
                         </ScrollView>
                     </View>
                 </View>
