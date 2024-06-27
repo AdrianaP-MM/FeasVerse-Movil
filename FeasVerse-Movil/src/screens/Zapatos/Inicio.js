@@ -6,92 +6,39 @@ import CardMarca from '../../components/zapatos/cardMarca';
 import CardZapato from '../../components/zapatos/cardZapato';
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
+import { fillData } from '../../utils/fillData'; 
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
 const Inicio = () => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(true); // Estado para autenticación
-
     const [zapatos, setZapatos] = useState([]);
-
-    useEffect(() => {
-        readUser();
-    }, []);
-
-    const fillData = async ({ php, accion, method, formData }) => {
-        try {
-            // Validar que los parámetros requeridos estén definidos
-            if (!php || !accion) {
-                throw new Error('Parámetros php, accion son obligatorios.');
-            }
-
-            let response;
-
-            if (method !== 'POST') {
-                // Petición GET si method no es POST
-                response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/${php}.php?action=${accion}`);
-            } else {
-                // Petición POST si method es POST
-                if (!formData) {
-                    throw new Error('formData es obligatorio para el método POST.');
-                }
-                response = await fetch(`${Constantes.IP}/FeasVerse/api/services/publica/${php}.php?action=${accion}`, {
-                    method: 'POST',
-                    body: formData
-                });
-            }
-
-            const result = await response.json();
-
-            if (result.status) {
-                return result.dataset; // Retorna el dataset si la respuesta es exitosa
-            } else if (result.message === 'Acceso denegado') {
-                setIsAuthenticated(false); // Manejo específico de "Acceso denegado"
-                showModal('Necesitas iniciar sesión para ver los zapatos');
-                return false;
-            } else {
-                // Manejo de otros errores
-                showModal(result.message);
-                return false;
-            }
-        } catch (error) {
-            // Manejo de errores generales
-            if (error instanceof TypeError) {
-                showModal('Error de red: Por favor, verifica tu conexión.');
-            } else {
-                showModal(`Error: ${error.message}`);
-            }
-            console.error('Error en fillData:', error);
-            return false;
-        }
-    };
-
-    const showModal = (message) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-    };
     const [userName, setUserName] = useState('');
 
+    useEffect(() => {
+        readElements();
+    }, []);
+
     // Función para leer el nombre del cliente
-    const readUser = async () => {
+    const readElements = async () => {
         try {
             // Llama a fillData con los parámetros correctos y espera la respuesta
             const response = await fillData({ php: 'cliente', accion: 'readCliente' });
+            const responseShoe = await fillData({ php: 'zapatos', accion: 'readAllEspecial' });
 
             if (response) {
                 setUserName(response.nombre_cliente);
             } else {
                 Alert.alert('Error', 'No se pudo obtener el nombre del cliente.');
             }
+            if (responseShoe) {
+                setZapatos(responseShoe);
+            } else {
+                Alert.alert('Error', 'No se pudo obtener los zapatos.');
+            }
+
         } catch (error) {
-            console.error('Error en readUser:', error);
-            Alert.alert('Error', 'Hubo un error al intentar obtener el nombre del cliente.');
+            console.error('Error en leer los elementos:', error);
+            Alert.alert('Error', 'Hubo un error.');
         }
     };
 
@@ -172,25 +119,13 @@ const Inicio = () => {
                                         genero_zapato: zapato.genero_zapato,
                                         estrellas: zapato.estrellas,
                                         precio_unitario_zapato: zapato.precio_unitario_zapato,
+                                        foto_detalle_zapato: zapato.foto_detalle_zapato
                                     }} />
                             ))}
                         </ScrollView>
                     </View>
                 </View>
             </ScrollView>
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={closeModal}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text>{modalMessage}</Text>
-                        <Button title="Cerrar" onPress={closeModal} />
-                    </View>
-                </View>
-            </Modal>
         </View>
     );
 };
