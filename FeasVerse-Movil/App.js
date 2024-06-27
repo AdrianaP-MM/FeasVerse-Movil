@@ -13,6 +13,7 @@ import Zapatos from './src/screens/Zapatos/Zapatos';
 import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
 import Registrarse from './src/screens/Login/Registrarse';
+import DetalleZapato from './src/screens/Zapatos/DetallesZapato'
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const MainScreen = ({ navigation }) => {
             <Button title="Go to LogIn" onPress={() => navigation.navigate('LogIn')} />
             <Button title="Go to Inicio" onPress={() => navigation.navigate('Inicio')} />
             <Button title="Go to Zapatos" onPress={() => navigation.navigate('Zapatos')} />
+            <Button title="Go to Detale Zapato" onPress={() => navigation.navigate('Detalle')} />
         </View>
     );
 };
@@ -70,6 +72,7 @@ const App = () => {
                 <Stack.Screen name="Inicio" component={Inicio} />
                 <Stack.Screen name="Zapatos" component={Zapatos} />
                 <Stack.Screen name="Registrarse" component={Registrarse} />
+                <Stack.Screen name="Detalle" component={DetalleZapato} />
             </Stack.Navigator>
         </NavigationContainer>
     );

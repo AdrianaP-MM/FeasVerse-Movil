@@ -55,8 +55,7 @@ const Zapatos = () => {
                                 font='TTWeb-Regular' textAlign='center' />
                         </View>
                         <View style={styles.containerText}>
-                            <Text texto='Adidas' font='TTWeb-Bold' textAlign='center' fontSize={35} color='white'/>
-
+                            <Text texto='Adidas' font='TTWeb-Bold' textAlign='center' fontSize={35} color='white' />
                         </View>
                     </TouchableOpacity>
                 )}
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
         width: '100%',
         position: 'relative',
     },
-    containerText:{
+    containerText: {
         zIndex: 4,
         position: 'absolute',
         bottom: 0,

@@ -1,5 +1,4 @@
 import React from 'react';
-import Text from '../utils/Text';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
 export default function CardCita({ accionCard, square = 150 }) {
