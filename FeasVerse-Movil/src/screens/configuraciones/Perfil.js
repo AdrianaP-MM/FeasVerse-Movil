@@ -117,106 +117,90 @@ const Perfil = ({ navigation }) => {
             </View>
             <View style={styles.labelBackground} />
             <View style={styles.headerLine} />
-            <TextInputC
-                label="Nombre"
-                valor={nombre}
-                setValor={setNombre}
-                keyboardType="default"
-                placeholder="Introduce tu nombre"
-                autoCapitalize="words"
-            />
-            <TextInputC
-                label="Apellido"
-                valor={apellido}
-                setValor={setApellido}
-                keyboardType="default"
-                placeholder="Introduce tu apellido"
-                autoCapitalize="words"
-            />
-            <TextInputC
-                label="Correo electrónico"
-                valor={correo}
-                setValor={setCorreo}
-                keyboardType="email-address"
-                placeholder="Introduce tu correo"
-                autoCapitalize="none"
-            />
-            <TextInputC
-                label="DUI"
-                valor={dui}
-                maxLength={10}
-                setValor={setDUI}
-                keyboardType="default"
-                placeholder="Introduce tu DUI"
-                autoCapitalize="none"
-            />
-            <TextInputC
-                label="Teléfono"
-                valor={telefono}
-                maxLength={9}
-                setValor={setTelefono}
-                keyboardType="numeric"
-                placeholder="Introduce tu número de teléfono"
-                autoCapitalize="none"
-            />
-            <View style={styles.containerFecha}>
-                <Button onPress={() => setShowPicker(true)} title="Seleccionar fecha de nacimiento" />
-                {showPicker && (
-                    <DateTimePicker
-                        mode="date"
-                        value={nacimiento}
-                        display="default"
-                        onChange={handleDateChange}
-                    />
-                )}
-                <Text style={styles.text}>Fecha seleccionada: {nacimiento.toLocaleDateString()}</Text>
-            </View>
-            <TextInputC
-                label="Dirección"
-                valor={direccion}
-                setValor={setDireccion}
-                keyboardType="default"
-                placeholder="Introduce tu dirección"
-                autoCapitalize="sentences"
-            />
-            <TextInputC
-                label="Contraseña"
-                valor={clave}
-                setValor={setClave}
-                keyboardType="default"
-                placeholder="Introduce tu contraseña"
-                secureTextEntry={true}
-            />
-            <TextInputC
-                label="Confirma tu contraseña"
-                valor={claveconfirmada}
-                setValor={setCofirmarClave}
-                keyboardType="default"
-                placeholder="Confirma tu contraseña"
-                secureTextEntry={true}
-            />
-            <View style={styles.modalContainer}>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalText}>{modalMessage}</Text>
-                    {isAuthenticated ? (
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={closeModal}
-                        >
-                            <Text style={styles.textStyle}>Cerrar</Text>
-                        </Pressable>
-                    ) : (
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                closeModal();
-                                navigation.navigate('Login');
-                            }}
-                        >
-                            <Text style={styles.textStyle}>Iniciar Sesión</Text>
-                        </Pressable>
+            <View style={styles.inputs}>
+                <TextInputC
+                    label="Nombre"
+                    valor={nombre}
+                    setValor={setNombre}
+                    keyboardType="default"
+                    placeholder="Introduce tu nombre"
+                    autoCapitalize="words"
+                />
+                <TextInputC
+                    label="Apellido"
+                    valor={apellido}
+                    setValor={setApellido}
+                    keyboardType="default"
+                    placeholder="Introduce tu apellido"
+                    autoCapitalize="words"
+                />
+                <TextInputC
+                    label="Correo electrónico"
+                    valor={correo}
+                    setValor={setCorreo}
+                    keyboardType="email-address"
+                    placeholder="Introduce tu correo"
+                    autoCapitalize="none"
+                />
+                <TextInputC
+                    label="DUI"
+                    valor={dui}
+                    maxLength={10}
+                    setValor={setDUI}
+                    keyboardType="default"
+                    placeholder="Introduce tu DUI"
+                    autoCapitalize="none"
+                />
+                <TextInputC
+                    label="Teléfono"
+                    valor={telefono}
+                    maxLength={9}
+                    setValor={setTelefono}
+                    keyboardType="numeric"
+                    placeholder="Introduce tu número de teléfono"
+                    autoCapitalize="none"
+                />
+                <View style={styles.containerFecha}>
+                    <Button onPress={() => setShowPicker(true)} title="Seleccionar fecha de nacimiento" />
+                    {showPicker && (
+                        <DateTimePicker
+                            mode="date"
+                            value={nacimiento}
+                            display="default"
+                            onChange={handleDateChange}
+                        />
                     )}
+                    <Text style={styles.text}>Fecha seleccionada: {nacimiento.toLocaleDateString()}</Text>
                 </View>
+                <TextInputC
+                    label="Dirección"
+                    valor={direccion}
+                    setValor={setDireccion}
+                    keyboardType="default"
+                    placeholder="Introduce tu dirección"
+                    autoCapitalize="sentences"
+                />
+                <TextInputC
+                    label="Contraseña"
+                    valor={clave}
+                    setValor={setClave}
+                    keyboardType="default"
+                    placeholder="Introduce tu contraseña"
+                    secureTextEntry={true}
+                />
+                <TextInputC
+                    label="Confirma tu contraseña"
+                    valor={claveconfirmada}
+                    setValor={setCofirmarClave}
+                    keyboardType="default"
+                    placeholder="Confirma tu contraseña"
+                    secureTextEntry={true}
+                />
+                <View style={styles.btnContainer}>
+                <Button
+                    title="Registrarse"
+                />
+            </View>
             </View>
         </SafeAreaView>
     );
@@ -235,6 +219,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         position: 'relative',
         zIndex: 3,
+    },
+    btnContainer: {
+        marginTop: 20,
+        width: '80%',
+        backgroundColor: '#0D4560',
+        height: 50,
+        borderRadius: 4,
+        overflow: 'hidden',
     },
     headerLabel: {
         backgroundColor: '#007BFF',
@@ -281,7 +273,7 @@ const styles = StyleSheet.create({
     },
     totalContainer: {
         marginBottom: 20,
-        marginHorizontal: 20,
+        marginHorizontal: 30,
     },
     totalText: {
         fontSize: 20,
@@ -342,6 +334,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    inputs: {
+        marginTop: 30,
+        marginHorizontal: 20,
+    },
+    containerFecha: {
+        marginVertical: 10,
+    },
+    text: {
+        fontSize: 16,
+        marginVertical: 10,
     },
 });
 

@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Inicio from '../screens/Zapatos/Inicio';
 import Zapatos from '../screens/Zapatos/Zapatos';
+import Perfil from '../screens/configuraciones/Perfil';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,8 +24,8 @@ const TabNavigator = () => {
                         iconName = 'shoe-formal';
                     } else if (route.name === 'Inicio') {
                         iconName = 'home';
-                    } else if (route.name === 'Configuraciones') {
-                        iconName = 'settings';
+                    } else if (route.name === 'Perfil') {
+                        iconName = 'account';
                     }
 
                     return (
@@ -41,6 +42,7 @@ const TabNavigator = () => {
         >
             <Tab.Screen name="Zapatos" component={Zapatos} options={{ headerShown: false }} />
             <Tab.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
+            <Tab.Screen name="Perfil" component={Perfil} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
 }
