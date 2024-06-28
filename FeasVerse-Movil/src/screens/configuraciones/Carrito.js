@@ -5,6 +5,9 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 import ProductCard from '../../components/Cards/ProductCard'; // Importa el componente ProductCard
 
 const { width } = Dimensions.get('window');
+// URL de la API de zapatos
+const ZAPATOS_API = 'services/publica/zapatos.php';
+const CARRITO_API = 'services/publica/carrito.php';
 
 const Carrito = ({ navigation }) => {
     const [products, setProducts] = useState([]);
@@ -17,6 +20,23 @@ const Carrito = ({ navigation }) => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [quantity, setQuantity] = useState('');
 
+    const fetchData = async (api, action, formData = null) => {
+        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
+        const response = await fetch(url, options);
+        const text = await response.text();
+        return JSON.parse(text);
+    };
+    
+    const sweetAlert = (type, message, timer = false) => {
+        Alert.alert(
+            type === 3 ? 'Error' : 'Success',
+            message,
+            [{ text: 'OK' }],
+            { cancelable: true }
+        );
+    };
+
     useEffect(() => {
         fetchCartData();
     }, []);
@@ -24,24 +44,30 @@ const Carrito = ({ navigation }) => {
     const fetchCartData = async () => {
         try {
             const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=readAll`);
-            const result = await response.json();
-            if (result.status) {
-                setProducts(result.dataset);
-                calculateTotal(result.dataset);
-            } else if (result.message === 'Acceso denegado') {
-                setIsAuthenticated(false);
-                showModal('Necesitas iniciar sesión para ver el carrito');
-            } else {
-                showModal(result.message);
+            const text = await response.text();
+            try {
+                const result = JSON.parse(text);
+                if (result.status) {
+                    setProducts(result.dataset);
+                    calculateTotal(result.dataset);
+                } else if (result.message === 'Acceso denegado') {
+                    setIsAuthenticated(false);
+                    showModal('Necesitas iniciar sesión para ver el carrito');
+                } else {
+                    showModal(result.error);
+                }
+            } catch (jsonError) {
+                showModal('Error al parsear los datos del carrito');
+                console.error('JSON parse error:', jsonError);
             }
         } catch (error) {
             showModal('Error al cargar los datos del carrito');
-            console.error(error);
+            console.error('Fetch error:', error);
         }
     };
 
     const calculateTotal = (products) => {
-        const totalAmount = products.reduce((sum, product) => sum + product.precio_total, 0);
+        const totalAmount = products.reduce((sum, product) => sum + parseFloat(product.precio_total), 0);
         setTotal(totalAmount);
     };
 
@@ -55,43 +81,75 @@ const Carrito = ({ navigation }) => {
                 body: formData
             });
 
-            const result = await response.json();
-            if (result.status) {
-                fetchCartData();
-            } else {
-                showModal(result.message);
+            const text = await response.text();
+            try {
+                const result = JSON.parse(text);
+                if (result.status) {
+                    fetchCartData();
+                } else {
+                    showModal(result.message);
+                }
+            } catch (jsonError) {
+                showModal('Error al parsear los datos de la eliminación');
+                console.error('JSON parse error:', jsonError);
             }
         } catch (error) {
             showModal('Error al eliminar el producto');
-            console.error(error);
+            console.error('Fetch error:', error);
         }
     };
 
     const handleUpdateQuantity = async (id, quantity) => {
+
         if (!quantity || isNaN(quantity) || quantity <= 0) {
             showModal('Por favor, introduce una cantidad válida.');
             return;
         }
-        try {
-            const formData = new FormData();
-            formData.append('idDetallesPedido', id);
-            formData.append('cantidad', quantity);
 
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=updateRow`, {
+        try {
+            // Verificar stock
+            const formData = new FormData();
+            formData.append('id_detalle_zapato', id);
+            const response = await fetch(`${Config.IP}/FeasVerse/api/${ZAPATOS_API}?action=validationCantidad`, {
                 method: 'POST',
                 body: formData
             });
 
-            const result = await response.json();
+            const text = await response.text();
+            const result = JSON.parse(text);
+
             if (result.status) {
+                const { cantidad_zapato } = result.dataset;
+                if (quantity > cantidad_zapato) {
+                    showModal(`Ingrese otra cantidad, nuestro stock actual de este zapato es: ${cantidad_zapato}`);
+                    return;
+                }
+            } else {
+                showModal(result.error);
+                return;
+            }
+
+            const updateFormData = new FormData();
+            updateFormData.append('idDetallesPedido', id);
+            updateFormData.append('cantidad', quantity);
+
+            const updateResponse = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=updateRow`, {
+                method: 'POST',
+                body: updateFormData
+            });
+
+            const updateText = await updateResponse.text();
+            const updateResult = JSON.parse(updateText);
+
+            if (updateResult.status) {
                 fetchCartData();
                 closeEditModal();
             } else {
-                showModal(result.message);
+                showModal(updateResult.message);
             }
         } catch (error) {
             showModal('Error al actualizar la cantidad');
-            console.error(error);
+            console.error('Fetch error:', error);
         }
     };
 
@@ -101,27 +159,69 @@ const Carrito = ({ navigation }) => {
                 showModal('No hay productos en el carrito');
                 return;
             }
-
-            const formData = new FormData();
-            formData.append('precio_total', total);
-
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=update`, {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-            if (result.status) {
-                fetchCartData();
+    
+            const DATA0 = await fetchData(CARRITO_API, 'leerPrecios');
+            if (DATA0.status) {
+                const ROW0 = DATA0.dataset;
+                const idPrecio = ROW0.id_costo_de_envio_por_departamento;
+    
+                const repartidorData = await fetchData(CARRITO_API, 'leerRepartidor');
+                if (repartidorData.status) {
+                    const repartidorRow = repartidorData.dataset;
+                    const idRepartidor = repartidorRow.id_trabajador;
+    
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    const day = String(today.getDate()).padStart(2, '0');
+                    const formattedDate = `${year}-${month}-${day}`;
+    
+                    const formData = new FormData();
+                    formData.append('fecha_de_inicio', formattedDate);
+                    formData.append('id_costo_de_envio_por_departamento', idPrecio);
+                    formData.append('estado_pedido', 1);
+    
+                    const carritoData = await fetchData(CARRITO_API, 'readAll');
+                    if (carritoData.status) {
+                        const carritoRow = carritoData.dataset[0];
+                        const idPedidoCliente = carritoRow.id_pedido_cliente;
+    
+                        formData.append('id_pedido_cliente', idPedidoCliente);
+                        formData.append('id_repartidor', idRepartidor);
+                        formData.append('precio_total', total);
+    
+                        const updateData = await fetchData(CARRITO_API, 'update', formData);
+                        if (updateData.status) {
+                            showModal('Compra realizada con éxito');
+                            fetchCartData(); // Vuelve a cargar el carrito
+                        } else {
+                            if (updateData.message === 'Acceso denegado') {
+                                sweetAlert(3, 'Debes de iniciar sesión', false);
+                                navigation.navigate('Login');
+                            } else {
+                                showModal(updateData.error);
+                            }
+                        }
+                    } else {
+                        showModal(carritoData.error);
+                    }
+                } else {
+                    if (repartidorData.message === 'Acceso denegado') {
+                        sweetAlert(3, 'Debes de iniciar sesión', false);
+                        navigation.navigate('Login');
+                    } else {
+                        showModal(repartidorData.error);
+                    }
+                }
             } else {
-                showModal(result.message);
+                showModal(DATA0.error);
             }
         } catch (error) {
             showModal('Error al realizar la compra');
-            console.error(error);
+            console.error('Fetch error:', error);
         }
     };
-
+    
     const showModal = (message) => {
         setModalMessage(message);
         setModalVisible(true);
@@ -183,7 +283,7 @@ const Carrito = ({ navigation }) => {
                 ))}
             </ScrollView>
             <View style={styles.totalContainer}>
-                <Text style={styles.totalText}>Total: ${total}</Text>
+                <Text style={styles.totalText}>Total: ${!isNaN(total) ? total.toFixed(2) : '0.00'}</Text>
             </View>
             <TouchableOpacity style={styles.buyButton} onPress={handleBuy}>
                 <Text style={styles.buyButtonText}>Comprar</Text>
@@ -322,13 +422,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         fontWeight: '300',
-        textAlign: 'left', // Alinea el texto a la izquierda
+        textAlign: 'left',
     },
     headerTextBold: {
         color: '#fff',
         fontSize: 24,
         fontWeight: 'bold',
-        textAlign: 'left', // Alinea el texto a la izquierda
+        textAlign: 'left',
     },
     labelBackground: {
         position: 'absolute',
