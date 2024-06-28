@@ -16,6 +16,7 @@ import Registrarse from './src/screens/Login/Registrarse';
 import DetalleZapato from './src/screens/Zapatos/DetallesZapato';
 import Perfil from './src/screens/configuraciones/Perfil';
 import Navigator from './src/Navigator/TabNavigator';
+import Configuraciones from './src/screens/configuraciones/Configuraciones';
 
 const Stack = createStackNavigator();
 
@@ -49,13 +50,15 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="App" screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="App" component={LogIn} />
-                <Stack.Screen name="Correo" component={Correo} />
-                <Stack.Screen name="Code" component={Code} />
-                <Stack.Screen name="NewPassword" component={NewPassword} />
-                <Stack.Screen name="LogIn" component={LogIn} />
-                <Stack.Screen name="Registrarse" component={Registrarse} />
+                <Stack.Screen name="App" component={LogIn}/>
+                <Stack.Screen name="Correo" component={Correo}/>
+                <Stack.Screen name="Code" component={Code}/>
+                <Stack.Screen name="NewPassword" component={NewPassword}/>
+                <Stack.Screen name="LogIn" component={LogIn}/>
+                <Stack.Screen name="Registrarse" component={Registrarse}/>
                 <Stack.Screen name="Inicio" component={Navigator} />
+                <Stack.Screen name="Configuraciones" component={Configuraciones} />
+
             </Stack.Navigator>
         </NavigationContainer>
     );

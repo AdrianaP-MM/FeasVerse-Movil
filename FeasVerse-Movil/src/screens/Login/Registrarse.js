@@ -65,8 +65,6 @@ const Registrarse = ({ navigation }) => {
             return;
         }
 
-
-        console.log(nombre, apellido, correo, clave, claveconfirmada, direccion, nacimiento, registro, telefono, dui)
         let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=signUp`;
         const formData = new FormData();
         formData.append('nombreInput', nombre);

@@ -24,7 +24,7 @@ const TabNavigator = () => {
                         iconName = 'shoe-formal';
                     } else if (route.name === 'Inicio') {
                         iconName = 'home';
-                    } else if (route.name === 'Perfil') {
+                    } else if (route.name === 'Configuraciones') {
                         iconName = 'cog';
                     }
 
