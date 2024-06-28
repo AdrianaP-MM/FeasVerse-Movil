@@ -10,7 +10,7 @@ import Input from '../../components/inputs/AllBorders'
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
-const Zapatos = () => {
+const Zapatos = ({navigation}) => {
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
     const screenHeight2 = screenHeight * 1.5;
@@ -96,10 +96,7 @@ const Zapatos = () => {
                 </View>
                 <View style={styles.colZapatos}>
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                        <CardZapato />
-                        <CardZapato />
-                        <CardZapato />
-                        <CardZapato />
+                        
                     </ScrollView>
                 </View>
             </View>
@@ -112,7 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexGrow: 1,
         marginTop: 30,
-        paddingBottom: 70,
+        paddingBottom: 60,
     },
     row: {
         width: '100%',
