@@ -84,14 +84,7 @@ const Zapatos = ({navigation}) => {
                 <View style={styles.colMarcas}>
                     <Text texto='¿Te interesa alguna marca en especifico?' font='TTWeb-SemiBold' color='white' textAlign='center' />
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
-                        <CardMarca square={100} accionCard={handleBrandClick} />
+                        
                     </ScrollView>
                 </View>
                 <View style={styles.colZapatos}>

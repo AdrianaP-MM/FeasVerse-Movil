@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 
-export default function CardCita({ accionCard, square = 150 }) {
+export default function CardCita({ accionCard, square = 150, marcaData }) {
     return (
         <TouchableOpacity onPress={accionCard}>
             <View style={[styles.containerTotal, { width: square, height: square }]}>
                 <Image
-                    source={require('../../img/marcas/marca.png')}
+                    source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/marcas/${marcaData.foto}` }}
                     style={styles.marcaImg}
                 />
             </View>
