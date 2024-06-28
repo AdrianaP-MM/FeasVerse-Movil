@@ -7,9 +7,47 @@ import Button from '../../components/buttons/Azul';
 import CardResena from '../../components/zapatos/CardResena'
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
+import { fillData } from '../../utils/fillData';
 
-const Zapatos = () => {
+const Zapatos = ({ route }) => {
+    const { id_zapato } = route.params;
     const [selectedValue, setSelectedValue] = useState('');
+    const [infoZapato, setInfo] = useState([]);
+
+    useEffect(() => {
+        readZapato();
+        //console.log(infoZapato);
+    }, []);
+
+
+    const readZapato = async () => {
+        try {
+            // Crear y llenar el formData
+            const formData = new FormData();
+            formData.append('id_zapato', id_zapato);
+
+            // Llamar a fillData y esperar la respuesta
+            const response = await fillData({
+                php: 'zapatos',
+                accion: 'readOneDetail',
+                method: 'POST',
+                formData: formData
+            });
+
+            if (Array.isArray(response) && response.length > 0) {
+                setInfo(response);
+                console.log(response);
+            } else {
+                Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+            }
+
+        } catch (error) {
+            console.error('Error en leer los elementos:', error);
+            Alert.alert('Error', 'Hubo un error.');
+        }
+    };
+
+
     return (
         <ScrollView style={styles.contenedorTotal}>
             <StatusBar style="dark" backgroundColor="#1591CC" />
@@ -17,14 +55,16 @@ const Zapatos = () => {
                 <View style={styles.zapatoInfo}>
                     <View style={styles.colImg}>
                         <Image
-                            source={require('../../img/zapatos/shoeDefaultBig.png')}
+                            source={infoZapato[0].foto_detalle_zapato ?
+                                { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${infoZapato[0].foto_detalle_zapato})` }
+                                : require('../../img/zapatos/shoeDefault.png')}
                             style={styles.shoeImg}
                         />
                     </View>
                     <View style={styles.colInfo}>
                         <View style={styles.shoeHeader}>
-                            <Text texto='Air Jordan 1' font='TTWeb-Regular' fontSize={24} />
-                            <Text texto='Zapato Unisex' font='TTWeb-SemiBold' color='#7D7D7D' />
+                            <Text texto={`${infoZapato[0].nombre_zapato}`} font='TTWeb-Regular' fontSize={24} />
+                            <Text texto={`${infoZapato.genero_zapato}`} font='TTWeb-SemiBold' color='#7D7D7D' />
                         </View>
                         <View style={styles.shoeBody}>
                             <Text texto='$285' fontSize={20} font='TTWeb-Bold' />
@@ -208,7 +248,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingLeft: 30,
     },
-    col:{
+    col: {
         justifyContent: 'center',
         alignItems: 'center',
     },

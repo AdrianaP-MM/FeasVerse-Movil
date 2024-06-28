@@ -58,7 +58,7 @@ const App = () => {
                 <Stack.Screen name="Registrarse" component={Registrarse}/>
                 <Stack.Screen name="Inicio" component={Navigator} />
                 <Stack.Screen name="Configuraciones" component={Configuraciones} />
-
+                <Stack.Screen name="Detalle" component={DetalleZapato} />
             </Stack.Navigator>
         </NavigationContainer>
     );

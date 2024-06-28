@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, View, Image, Alert, ScrollView, Dimensions, Modal } from 'react-native';
+import { StyleSheet, View, Image, Alert, ScrollView, Dimensions, Modal, TouchableOpacity } from 'react-native';
 import Text from '../../components/utils/Text';
 import Pastilla from '../../components/buttons/Pastilla';
 import CardMarca from '../../components/zapatos/cardMarca';
@@ -10,7 +10,7 @@ import { fillData } from '../../utils/fillData';
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
-const Inicio = () => {
+const Inicio = ({ navigation }) => {
     const [zapatos, setZapatos] = useState([]);
     const [marcas, setMarcas] = useState([]);
     const [masVendido, setMasVendido] = useState('');
@@ -61,7 +61,15 @@ const Inicio = () => {
         }
     };
 
+    // Función para cambiar de pantalla
+    const handleViewDetalleMas = () => {
+        navigation.navigate('Detalle', { id_zapato: masVendido.id_zapato });
+    };
 
+    // Función para cambiar de pantalla
+    const handleViewDetalle = () => {
+        navigation.navigate('Detalle', { id_zapato: zapatos.id_zapato });
+    };
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
     const fila1Height = screenHeight * 0.60;
@@ -105,13 +113,14 @@ const Inicio = () => {
                             </View>
                             <View style={styles.cardBody}>
                                 <Text texto='Par más vendido en este mes' color='#252525' />
-                                <Image
-                                    source={masVendido.foto_detalle_zapato ?
-                                        { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${masVendido.foto_detalle_zapato}` }
-                                        : require('../../img/zapatos/shoeDefault.png')}
-                                    style={styles.shoeImg}
-                                />
-
+                                <TouchableOpacity onPress={handleViewDetalleMas}>
+                                    <Image
+                                        source={masVendido.foto_detalle_zapato ?
+                                            { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${masVendido.foto_detalle_zapato}` }
+                                            : require('../../img/zapatos/shoeDefault.png')}
+                                        style={styles.shoeImg}
+                                    />
+                                </TouchableOpacity>
                                 <Text texto='Conseguir el mio >>' color='#0066FF' fontSize={15} textAlign='center' font='TTWeb-Black' />
                             </View>
                         </View>
