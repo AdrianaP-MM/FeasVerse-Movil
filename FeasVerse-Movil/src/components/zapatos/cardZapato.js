@@ -1,8 +1,9 @@
 import React from 'react';
 import Text from '../utils/Text';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 
-export default function CardCita({ accionCard, zapatoData }) {
+export default function CardZapato({ accionCard, zapatoData }) {
     return (
         <TouchableOpacity onPress={accionCard}>
             <View style={styles.containerTotal}>
