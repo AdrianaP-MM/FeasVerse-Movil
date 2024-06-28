@@ -84,6 +84,7 @@ const Registrarse = ({ navigation }) => {
             method: 'POST',
             body: formData
         });
+        
         const datos = await fetchApi.json();
         if (datos.status) {
             Alert.alert('Te has registrado correctamente');
