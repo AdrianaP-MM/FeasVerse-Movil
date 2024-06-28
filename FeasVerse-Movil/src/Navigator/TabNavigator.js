@@ -25,7 +25,7 @@ const TabNavigator = () => {
                     } else if (route.name === 'Inicio') {
                         iconName = 'home';
                     } else if (route.name === 'Perfil') {
-                        iconName = 'account';
+                        iconName = 'cog';
                     }
 
                     return (

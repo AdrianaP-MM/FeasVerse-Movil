@@ -19,20 +19,6 @@ import Navigator from './src/Navigator/TabNavigator';
 
 const Stack = createStackNavigator();
 
-const MainScreen = ({ navigation }) => {
-    return (
-        <View style={styles.container}>
-            <Text>Bienvenido a la pantalla principal</Text>
-            <Button title="Go to Mail" onPress={() => navigation.navigate('Correo')} />
-            <Button title="Go to Code" onPress={() => navigation.navigate('Code', { email: '' })} />
-            <Button title="Go to Carrito" onPress={() => navigation.navigate('Carrito')} />
-            <Button title="Go to LogIn" onPress={() => navigation.navigate('LogIn')} />
-            <Button title="Go to Inicio" onPress={() => navigation.navigate('Inicio')} />
-            <Button title="Go to Perfil" onPress={() => navigation.navigate('Perfil')} />
-        </View>
-    );
-};
-
 const App = () => {
     const [appIsReady, setAppIsReady] = useState(false);
     const [fontsLoaded] = useFonts({
@@ -63,18 +49,13 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName="App" screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="App" component={MainScreen} />
+                <Stack.Screen name="App" component={LogIn} />
                 <Stack.Screen name="Correo" component={Correo} />
                 <Stack.Screen name="Code" component={Code} />
                 <Stack.Screen name="NewPassword" component={NewPassword} />
-                <Stack.Screen name="Message" component={Message} />
-                <Stack.Screen name="Carrito" component={Carrito} />
                 <Stack.Screen name="LogIn" component={LogIn} />
-                <Stack.Screen name="Zapatos" component={Zapatos} />
                 <Stack.Screen name="Registrarse" component={Registrarse} />
-                <Stack.Screen name="Detalle" component={DetalleZapato} />
                 <Stack.Screen name="Inicio" component={Navigator} />
-                <Stack.Screen name="Perfil" component={Perfil} />
             </Stack.Navigator>
         </NavigationContainer>
     );
