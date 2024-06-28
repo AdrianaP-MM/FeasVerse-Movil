@@ -7,19 +7,23 @@ import ProductCard from '../../components/Cards/ProductCard'; // Importa el comp
 const { width } = Dimensions.get('window');
 // URL de la API de zapatos
 const ZAPATOS_API = 'services/publica/zapatos.php';
+// URL de la API del carrito
 const CARRITO_API = 'services/publica/carrito.php';
 
 const Carrito = ({ navigation }) => {
+    // Define los estados
+    const [nombre, setNombre] = useState('');
     const [products, setProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(true); // Estado para autenticación
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [quantity, setQuantity] = useState('');
 
+    // Función para obtener los datos de la API
     const fetchData = async (api, action, formData = null) => {
         const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
@@ -27,7 +31,26 @@ const Carrito = ({ navigation }) => {
         const text = await response.text();
         return JSON.parse(text);
     };
-    
+
+    const fetchUsuario = () => {
+        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.dataset) {
+                    const usuario = data.dataset;
+                    setNombre(usuario.nombre_cliente);
+                } else {
+                    console.error('Datos no están en el formato esperado:', data);
+                    setLoading(false);
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar los datos:", error);
+                setLoading(false);
+            });
+    };
+
+    // Función para mostrar un mensaje de alerta
     const sweetAlert = (type, message, timer = false) => {
         Alert.alert(
             type === 3 ? 'Error' : 'Success',
@@ -37,10 +60,13 @@ const Carrito = ({ navigation }) => {
         );
     };
 
+    // Efecto para cargar los datos del carrito
     useEffect(() => {
+        fetchUsuario();
         fetchCartData();
     }, []);
 
+    // Función para obtener los datos del carrito
     const fetchCartData = async () => {
         try {
             const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=readAll`);
@@ -66,11 +92,13 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+    // Función para calcular el total de la compra
     const calculateTotal = (products) => {
         const totalAmount = products.reduce((sum, product) => sum + parseFloat(product.precio_total), 0);
         setTotal(totalAmount);
     };
 
+    // Función para eliminar un producto del carrito
     const handleDelete = async (id) => {
         try {
             const formData = new FormData();
@@ -99,6 +127,7 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+    // Función para actualizar la cantidad de un producto en el carrito
     const handleUpdateQuantity = async (id, quantity) => {
 
         if (!quantity || isNaN(quantity) || quantity <= 0) {
@@ -153,6 +182,7 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+    // Función para realizar la compra
     const handleBuy = async () => {
         try {
             if (total === 0) {
@@ -222,30 +252,36 @@ const Carrito = ({ navigation }) => {
         }
     };
     
+    // Función para mostrar un mensaje modal
     const showModal = (message) => {
         setModalMessage(message);
         setModalVisible(true);
     };
 
+    // Función para abrir el modal
     const closeModal = () => {
         setModalVisible(false);
     };
 
+    // Función para abrir el modal de editar
     const openEditModal = (product) => {
         setSelectedProduct(product);
         setQuantity(product.cantidad_pedido.toString());
         setEditModalVisible(true);
     };
 
+    // Función para cerrar el modal de editar
     const closeEditModal = () => {
         setEditModalVisible(false);
     };
 
+    // Función para abrir el modal de eliminar
     const openDeleteModal = (product) => {
         setSelectedProduct(product);
         setDeleteModalVisible(true);
     };
 
+    // Función para cerrar el modal de eliminar
     const closeDeleteModal = () => {
         setDeleteModalVisible(false);
     };
@@ -257,7 +293,7 @@ const Carrito = ({ navigation }) => {
                     <Ionicons name="cart" size={40} color="#fff" />
                 </View>
                 <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerTextLight}>Hola, Adri</Text>
+                    <Text style={styles.headerTextLight}>Hola, {nombre}</Text>
                     <Text style={styles.headerTextBold}>Tu carrito de compras</Text>
                 </View>
             </View>

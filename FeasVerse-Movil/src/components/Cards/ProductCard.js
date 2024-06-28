@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ProductCard = ({ product, onEdit, onDelete }) => {
     return (
         <View style={styles.productContainer}>
-            <Image source={{ uri: product.image }} style={styles.productImage} />
+            <Image source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${product.image}` }} style={styles.productImage} />
             <View style={styles.productDetails}>
                 <Text style={styles.productName}>{product.name}</Text>
                 <Text style={styles.productGender}>{product.gender}</Text>
