@@ -237,18 +237,20 @@ const Carrito = ({ navigation }) => {
                                     onChangeText={setQuantity}
                                     placeholder="Cantidad"
                                 />
-                                <Pressable
-                                    style={[styles.button, styles.buttonClose]}
-                                    onPress={() => handleUpdateQuantity(selectedProduct.id_detalles_pedido, quantity)}
-                                >
-                                    <Text style={styles.textStyle}>Actualizar</Text>
-                                </Pressable>
-                                <Pressable
-                                    style={[styles.button, styles.buttonClose]}
-                                    onPress={closeEditModal}
-                                >
-                                    <Text style={styles.textStyle}>Cancelar</Text>
-                                </Pressable>
+                                <View style={styles.buttonRow}>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonClose]}
+                                        onPress={() => handleUpdateQuantity(selectedProduct.id_detalles_pedido, quantity)}
+                                    >
+                                        <Text style={styles.textStyle}>Actualizar</Text>
+                                    </Pressable>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonClose]}
+                                        onPress={closeEditModal}
+                                    >
+                                        <Text style={styles.textStyle}>Cancelar</Text>
+                                    </Pressable>
+                                </View>
                             </>
                         )}
                     </View>
@@ -266,21 +268,23 @@ const Carrito = ({ navigation }) => {
                         {selectedProduct && (
                             <>
                                 <Text>Producto: {selectedProduct.nombre_zapato}</Text>
-                                <Pressable
-                                    style={[styles.button, styles.buttonClose]}
-                                    onPress={() => {
-                                        handleDelete(selectedProduct.id_detalles_pedido);
-                                        closeDeleteModal();
-                                    }}
-                                >
-                                    <Text style={styles.textStyle}>Eliminar</Text>
-                                </Pressable>
-                                <Pressable
-                                    style={[styles.button, styles.buttonClose]}
-                                    onPress={closeDeleteModal}
-                                >
-                                    <Text style={styles.textStyle}>Cancelar</Text>
-                                </Pressable>
+                                <View style={styles.buttonRow}>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonClose]}
+                                        onPress={() => {
+                                            handleDelete(selectedProduct.id_detalles_pedido);
+                                            closeDeleteModal();
+                                        }}
+                                    >
+                                        <Text style={styles.textStyle}>Eliminar</Text>
+                                    </Pressable>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonClose]}
+                                        onPress={closeDeleteModal}
+                                    >
+                                        <Text style={styles.textStyle}>Cancelar</Text>
+                                    </Pressable>
+                                </View>
                             </>
                         )}
                     </View>
@@ -415,6 +419,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         textAlign: 'center',
+        marginTop: 20,
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 20,
     },
 });
 
