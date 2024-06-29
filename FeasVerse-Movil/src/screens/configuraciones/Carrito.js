@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, Alert, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, FontSizes, Config } from '../../utils/constantes';
 import ProductCard from '../../components/Cards/ProductCard'; // Importa el componente ProductCard
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 
 const { width } = Dimensions.get('window');
 // URL de la API de zapatos

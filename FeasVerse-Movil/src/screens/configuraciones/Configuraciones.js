@@ -1,44 +1,84 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, ActivityIndicator, Alert, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, FontSizes, Config } from '../../utils/constantes';
-import TextInputC from '../../components/inputs/Border_Down';
+import { Config } from '../../utils/constantes';
 
 const { width } = Dimensions.get('window');
 
 const Configuraciones = ({ navigation }) => {
+    const [nombre, setNombre] = useState('');
 
-    const showModal = (message) => {
-        setModalMessage(message);
-        setIsModalVisible(true);
+    useEffect(() => {
+        fetchUsuario();
+    }, []);
+
+    const fetchUsuario = () => {
+        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.dataset) {
+                    const usuario = data.dataset;
+                    setNombre(usuario.nombre_cliente);
+                } else {
+                    console.error('Datos no están en el formato esperado:', data);
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar los datos:", error);
+            });
     };
 
-
-    const closeModal = () => {
-        setIsModalVisible(false);
+    const handleLogOut = async () => {
+        const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
+        const fetchApi = await fetch(url);
+        const datos = await fetchApi.json();
+        if (datos.status) {
+            navigation.navigate('LogIn');
+        } else {
+            console.log(datos);
+            Alert.alert('Error sesión', datos.error);
+        }
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.card}>
-                <View style={styles.iconPlaceholder} />
-                <Text style={styles.title}>Tu perfil</Text>
-                <Text style={styles.description}>
-                    Apartado para visualizar tu información y modificarla en caso un dato esté incorrecto o si requiere actualización.
-                </Text>
+            <View style={styles.headerContainer}>
+                <View style={styles.headerLabel}>
+                    <Ionicons name="settings" size={40} color="#fff" />
+                </View>
+                <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerTextLight}>Hola, {nombre}</Text>
+                    <Text style={styles.headerTextBold}>Configuraciones</Text>
+                </View>
             </View>
+            <View style={styles.labelBackground} />
+            <View style={styles.headerLine} />
 
-            <View style={styles.card}>
-                <View style={styles.cartIconPlaceholder} />
-                <Text style={styles.title}>Carrito</Text>
-                <Text style={styles.description}>
-                    Apartado para poder visualizar tu carrito donde podrás visualizar cuáles zapatos quisieras comprar o si quieres más cantidad de zapato.
-                </Text>
+            <View style={styles.scrollView}>
+                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Perfil')}>
+                    <Ionicons name="person-circle" size={50} color="#007BFF" style={styles.iconPlaceholder} />
+                    <View style={styles.cardTextContainer}>
+                        <Text style={styles.title}>Tu perfil</Text>
+                        <Text style={styles.description}>
+                            Apartado para visualizar tu información y modificarla en caso un dato esté incorrecto o si requiere actualización.
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Carrito')}>
+                    <Ionicons name="cart" size={50} color="#007BFF" style={styles.iconPlaceholder} />
+                    <View style={styles.cardTextContainer}>
+                        <Text style={styles.title}>Carrito</Text>
+                        <Text style={styles.description}>
+                            Apartado para poder visualizar tu carrito donde podrás visualizar cuáles zapatos quisieras comprar o si quieres más cantidad de zapato.
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={handleLogOut}>
+                    <Text style={styles.buttonText}>Cerrar sesión</Text>
+                </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Cerrar sesión</Text>
-            </TouchableOpacity>
         </View>
     );
 };
@@ -56,14 +96,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         position: 'relative',
         zIndex: 3,
-    },
-    btnContainer: {
-        marginTop: 20,
-        width: '80%',
-        backgroundColor: '#0D4560',
-        height: 50,
-        borderRadius: 4,
-        overflow: 'hidden',
     },
     headerLabel: {
         backgroundColor: '#007BFF',
@@ -108,80 +140,40 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginBottom: 20,
     },
-    totalContainer: {
+    card: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+        padding: 20,
         marginBottom: 20,
-        marginHorizontal: 30,
     },
-    totalText: {
+    iconPlaceholder: {
+        marginRight: 10,
+    },
+    cardTextContainer: {
+        flex: 1,
+    },
+    title: {
         fontSize: 20,
         fontWeight: 'bold',
+        marginBottom: 10,
     },
-    buyButton: {
+    description: {
+        fontSize: 16,
+        color: '#666',
+    },
+    button: {
         backgroundColor: '#007BFF',
         padding: 15,
         borderRadius: 10,
-        marginHorizontal: 20,
         alignItems: 'center',
         marginBottom: 20,
     },
-    buyButtonText: {
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-    },
-    buttonClose: {
-        backgroundColor: '#2196F3',
-    },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-    },
-    loader: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    inputs: {
-        marginTop: 30,
-        marginHorizontal: 20,
-    },
-    containerFecha: {
-        marginVertical: 10,
-    },
-    text: {
-        fontSize: 16,
-        marginVertical: 10,
     },
 });
 

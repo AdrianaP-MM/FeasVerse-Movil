@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Correo from './src/screens/restablecer/Correo';
 import Code from './src/screens/restablecer/Code';
 import NewPassword from './src/screens/restablecer/NewPassword';
@@ -11,17 +11,27 @@ import LogIn from './src/screens/Login/Login';
 import Inicio from './src/screens/Zapatos/Inicio';
 import Zapatos from './src/screens/Zapatos/Zapatos';
 import { useFonts } from 'expo-font';
-import { useEffect, useState } from 'react';
 import Registrarse from './src/screens/Login/Registrarse';
 import DetalleZapato from './src/screens/Zapatos/DetallesZapato';
 import Perfil from './src/screens/configuraciones/Perfil';
 import Navigator from './src/Navigator/TabNavigator';
 import Configuraciones from './src/screens/configuraciones/Configuraciones';
+import { Config } from './src/utils/constantes';
 
 const Stack = createStackNavigator();
 
 const App = () => {
     const [appIsReady, setAppIsReady] = useState(false);
+    const [initialRoute, setInitialRoute] = useState('LogIn');
+
+    const fetchData = async (api, action, formData = null) => {
+        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
+        const response = await fetch(url, options);
+        const text = await response.text();
+        return JSON.parse(text);
+    };
+
     const [fontsLoaded] = useFonts({
         'TTWeb-Black': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Black.ttf'),
         'TTWeb-Bold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Bold.ttf'),
@@ -34,6 +44,10 @@ const App = () => {
         async function prepareApp() {
             try {
                 if (fontsLoaded) {
+                    const DATA = await fetchData('services/publica/cliente.php', 'getUser');
+                    if (DATA.session) {
+                        setInitialRoute('Inicio');
+                    }
                     setAppIsReady(true);
                 }
             } catch (e) {
@@ -49,14 +63,17 @@ const App = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="App" screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="App" component={LogIn}/>
-                <Stack.Screen name="Correo" component={Correo}/>
-                <Stack.Screen name="Code" component={Code}/>
-                <Stack.Screen name="NewPassword" component={NewPassword}/>
-                <Stack.Screen name="LogIn" component={LogIn}/>
-                <Stack.Screen name="Registrarse" component={Registrarse}/>
+            <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="App" component={LogIn} />
+                <Stack.Screen name="Correo" component={Correo} />
+                <Stack.Screen name="Code" component={Code} />
+                <Stack.Screen name="NewPassword" component={NewPassword} />
+                <Stack.Screen name="LogIn" component={LogIn} />
+                <Stack.Screen name="Registrarse" component={Registrarse} />
                 <Stack.Screen name="Inicio" component={Navigator} />
+                <Stack.Screen name="Carrito" component={Carrito} />
+                <Stack.Screen name="Perfil" component={Perfil} />
+                <Stack.Screen name="Message" component={Message} />
                 <Stack.Screen name="Configuraciones" component={Configuraciones} />
                 <Stack.Screen name="Detalle" component={DetalleZapato} />
             </Stack.Navigator>

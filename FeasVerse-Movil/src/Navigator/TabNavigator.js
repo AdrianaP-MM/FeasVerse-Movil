@@ -8,6 +8,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Inicio from '../screens/Zapatos/Inicio';
 import Zapatos from '../screens/Zapatos/Zapatos';
 import Perfil from '../screens/configuraciones/Perfil';
+import Carrito from '../screens/configuraciones/Carrito';
+import Configuraciones from '../screens/configuraciones/Configuraciones';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +44,7 @@ const TabNavigator = () => {
         >
             <Tab.Screen name="Zapatos" component={Zapatos} options={{ headerShown: false }} />
             <Tab.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
-            <Tab.Screen name="Perfil" component={Perfil} options={{ headerShown: false }} />
+            <Tab.Screen name="Configuraciones" component={Configuraciones} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
 }

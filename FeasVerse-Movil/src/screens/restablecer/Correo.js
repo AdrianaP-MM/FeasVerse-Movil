@@ -36,6 +36,7 @@ const Correo = ({ navigation }) => {
 
                 if (data2.status) {
                     Alert.alert('Éxito', 'Se ha enviado correctamente al correo electrónico, ingrese el código enviado');
+                    console.log(data2.codigo);
                     navigation.navigate('Code', { email, codigo: data2.codigo, id: data.dataset.id_cliente });
                 } else {
                     Alert.alert('Error', data2.error);

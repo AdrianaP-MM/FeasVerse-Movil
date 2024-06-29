@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import CustomTextInput from '../../components/inputs/CustomTextInput ';
+import CustomTextInputPassword from '../../components/inputs/CustomTextInputPassword';
 import { Colors, FontSizes, Config } from '../../utils/constantes'; // Importamos nuestro componente CustomTextInput
 
 const NewPassword = ({ route, navigation }) => {
@@ -60,14 +60,14 @@ const NewPassword = ({ route, navigation }) => {
                     <Text style={styles.subtitle}>Ingresa tu nueva contraseña a continuación.</Text>
                     <Text style={styles.label}>Nueva contraseña</Text>
                 </View>
-                <CustomTextInput
+                <CustomTextInputPassword
                     placeholder="Ingrese tu nueva contraseña"
                     secureTextEntry
                     value={password}
                     onChangeText={handlePasswordChange}
                 />
                 <Text style={styles.label}>Confirmar nueva contraseña</Text>
-                <CustomTextInput
+                <CustomTextInputPassword
                     placeholder="Confirme su nueva contraseña"
                     secureTextEntry
                     value={confirmPassword}

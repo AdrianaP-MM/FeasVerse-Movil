@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 
 const ProductCard = ({ product, onEdit, onDelete }) => {
     return (

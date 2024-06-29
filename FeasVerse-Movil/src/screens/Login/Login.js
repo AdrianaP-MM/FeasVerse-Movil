@@ -110,12 +110,6 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
                     onPress={handlerLogin}
                 />
             </View>
-            <View style={styles.btnContainer}>
-                <Button
-                    title="Cerrar"
-                    onPress={handleLogOut}
-                />
-            </View>
             <View style={styles.row}>
                 <Text style={styles.text}>
                     ¿Olvidaste tu contraseña? 
