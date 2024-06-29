@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, ActivityIndicator, Alert, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, ActivityIndicator, Alert, Button, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import TextInputC from '../../components/inputs/Border_Down';
@@ -11,17 +11,21 @@ const Perfil = ({ navigation }) => {
     const [apellido, setApellido] = useState('');
     const [correo, setCorreo] = useState('');
     const [dui, setDUI] = useState('');
+    const [idCliente, setID] = useState('');
     const [telefono, setTelefono] = useState('');
     const [nacimiento, setNacimiento] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const [direccion, setDireccion] = useState('');
-    const [clave, setClave] = useState('');
-    const [claveconfirmada, setCofirmarClave] = useState('');
-    const [fontsLoaded, setFontsLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(true); 
+    const [modalNombre, setModalNombre] = useState('');
+    const [modalApellido, setModalApellido] = useState('');
+    const [modalCorreo, setModalCorreo] = useState('');
+    const [modalDUI, setModalDUI] = useState('');
+    const [modalTelefono, setModalTelefono] = useState('');
+    const [modalNacimiento, setModalNacimiento] = useState(new Date());
+    const [modalDireccion, setModalDireccion] = useState('');
+    const [modalID, setModalID] = useState('');
 
     useEffect(() => {
         fetchUsuario();
@@ -42,7 +46,7 @@ const Perfil = ({ navigation }) => {
                     setTelefono(usuario.telefono_cliente);
                     setNacimiento(new Date(usuario.fecha_de_nacimiento));
                     setDireccion(usuario.direccion_cliente);
-                    setClave(usuario.clave_cliente);
+                    setID(usuario.id_cliente);
                     setLoading(false);
                 } else {
                     console.error('Datos no están en el formato esperado:', data);
@@ -59,24 +63,30 @@ const Perfil = ({ navigation }) => {
         try {
             const formData = new FormData();
             formData.append('idCliente', idCliente); 
-            formData.append('nombreInput', nombre);
-            formData.append('apellidosInput', apellido);
-            formData.append('correoInput', correo);
-            formData.append('duiInput', dui);
-            formData.append('telefonoInput', telefono);
-            formData.append('fechanInput', nacimiento.toISOString().split('T')[0]);
-            formData.append('direccionInput', direccion);
-            formData.append('contraInput', clave);
-            formData.append('confirmContraseña', claveconfirmada);
-
+            formData.append('nombreInput', modalNombre);
+            formData.append('apellidosInput', modalApellido);
+            formData.append('correoInput', modalCorreo);
+            formData.append('duiInput', modalDUI);
+            formData.append('telefonoInput', modalTelefono);
+            formData.append('fechanInput', modalNacimiento.toISOString().split('T')[0]);
+            formData.append('direccion', modalDireccion);
+    
             const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=editProfile`, {
                 method: 'POST',
                 body: formData
             });
-
+    
             const data = await response.json();
             if (data.status) {
                 Alert.alert('Éxito', data.message);
+                setNombre(modalNombre);
+                setApellido(modalApellido);
+                setCorreo(modalCorreo);
+                setDUI(modalDUI);
+                setTelefono(modalTelefono);
+                setNacimiento(modalNacimiento);
+                setDireccion(modalDireccion);
+                setID(modalID);
                 setIsModalVisible(false);
             } else {
                 Alert.alert('Error', data.error);
@@ -85,6 +95,7 @@ const Perfil = ({ navigation }) => {
             Alert.alert('Error', 'Ocurrió un error al editar el usuario');
         }
     };
+
 
     if (loading) {
         return (
@@ -95,8 +106,15 @@ const Perfil = ({ navigation }) => {
         );
     }
 
-    const showModal = (message) => {
-        setModalMessage(message);
+    const openModal = () => {
+        setModalNombre(nombre);
+        setModalApellido(apellido);
+        setModalCorreo(correo);
+        setModalDUI(dui);
+        setModalTelefono(telefono);
+        setModalNacimiento(nacimiento);
+        setModalDireccion(direccion);
+        setModalID(idCliente); 
         setIsModalVisible(true);
     };
 
@@ -125,6 +143,7 @@ const Perfil = ({ navigation }) => {
                     keyboardType="default"
                     placeholder="Introduce tu nombre"
                     autoCapitalize="words"
+                    editable={false}
                 />
                 <TextInputC
                     label="Apellido"
@@ -133,6 +152,7 @@ const Perfil = ({ navigation }) => {
                     keyboardType="default"
                     placeholder="Introduce tu apellido"
                     autoCapitalize="words"
+                    editable={false}
                 />
                 <TextInputC
                     label="Correo electrónico"
@@ -141,6 +161,7 @@ const Perfil = ({ navigation }) => {
                     keyboardType="email-address"
                     placeholder="Introduce tu correo"
                     autoCapitalize="none"
+                    editable={false}
                 />
                 <TextInputC
                     label="DUI"
@@ -150,6 +171,7 @@ const Perfil = ({ navigation }) => {
                     keyboardType="default"
                     placeholder="Introduce tu DUI"
                     autoCapitalize="none"
+                    editable={false}
                 />
                 <TextInputC
                     label="Teléfono"
@@ -159,18 +181,10 @@ const Perfil = ({ navigation }) => {
                     keyboardType="numeric"
                     placeholder="Introduce tu número de teléfono"
                     autoCapitalize="none"
+                    editable={false}
                 />
                 <View style={styles.containerFecha}>
-                    <Button onPress={() => setShowPicker(true)} title="Seleccionar fecha de nacimiento" />
-                    {showPicker && (
-                        <DateTimePicker
-                            mode="date"
-                            value={nacimiento}
-                            display="default"
-                            onChange={handleDateChange}
-                        />
-                    )}
-                    <Text style={styles.text}>Fecha seleccionada: {nacimiento.toLocaleDateString()}</Text>
+                    <Text style={styles.text}>Fecha de nacimiento: {nacimiento.toLocaleDateString()}</Text>
                 </View>
                 <TextInputC
                     label="Dirección"
@@ -179,29 +193,79 @@ const Perfil = ({ navigation }) => {
                     keyboardType="default"
                     placeholder="Introduce tu dirección"
                     autoCapitalize="sentences"
-                />
-                <TextInputC
-                    label="Contraseña"
-                    valor={clave}
-                    setValor={setClave}
-                    keyboardType="default"
-                    placeholder="Introduce tu contraseña"
-                    secureTextEntry={true}
-                />
-                <TextInputC
-                    label="Confirma tu contraseña"
-                    valor={claveconfirmada}
-                    setValor={setCofirmarClave}
-                    keyboardType="default"
-                    placeholder="Confirma tu contraseña"
-                    secureTextEntry={true}
+                    editable={false}
                 />
                 <View style={styles.btnContainer}>
-                <Button
-                    title="Registrarse"
-                />
+                    <Button
+                        title="Editar Informacion"
+                        onPress={openModal}
+                    />
+                </View>
             </View>
-            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={closeModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Editar Información</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalNombre}
+                            value={modalNombre}
+                            placeholder="Nombre"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalApellido}
+                            value={modalApellido}
+                            placeholder="Apellido"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalCorreo}
+                            value={modalCorreo}
+                            placeholder="Correo"
+                            keyboardType="email-address"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalDUI}
+                            value={modalDUI}
+                            placeholder="DUI"
+                            maxLength={10}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalTelefono}
+                            value={modalTelefono}
+                            placeholder="Teléfono"
+                            keyboardType="numeric"
+                            maxLength={9}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setModalDireccion}
+                            value={modalDireccion}
+                            placeholder="Dirección"
+                        />
+                        <View style={styles.btnContainer}>
+                            <Button
+                                title="Guardar"
+                                onPress={handleEdit}
+                            />
+                        </View>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={closeModal}
+                        >
+                            <Text style={styles.textStyle}>Cerrar</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 };
@@ -216,9 +280,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#007BFF',
         paddingVertical: 20,
-        paddingHorizontal: 15,
-        position: 'relative',
-        zIndex: 3,
+        paddingHorizontal: 10,
+        borderBottomRightRadius: 20,
     },
     btnContainer: {
         marginTop: 20,
@@ -312,6 +375,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        width: '90%',
     },
     button: {
         borderRadius: 20,
@@ -345,6 +409,14 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         marginVertical: 10,
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 10,
+        width: '100%',
     },
 });
 
