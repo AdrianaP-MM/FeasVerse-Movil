@@ -3,7 +3,7 @@ import Text from '../utils/Text';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 
-export default function CardZapato({ accionCard, zapatoData }) {
+export default function CardZapato({ zapatoData }) {
     return (
         <View style={styles.containerTotal}>
             <View style={styles.container}>

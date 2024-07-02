@@ -7,6 +7,7 @@ import CardZapato from '../../components/zapatos/cardZapato';
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import Input from '../../components/inputs/AllBorders'
+import { fillData } from '../../utils/fillData';
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
@@ -34,6 +35,50 @@ const Zapatos = ({navigation}) => {
             duration: 300,
             useNativeDriver: true,
         }).start(() => setIsBrandSelected(false));
+    };
+
+    function handleViewDetalle(id_zapato) {
+        if (id_zapato != null || id_zapato != 0) {
+            navigation.navigate('Detalle', { id_zapato: id_zapato });
+            console.log(id_zapato);
+        }
+    }
+
+    const [zapatos, setZapatos] = useState([]);
+    const [marcas, setMarcas] = useState([]);
+    const [masVendido, setMasVendido] = useState('');
+    const [userName, setUserName] = useState('');
+    const [cantdPedidos, setCantdPedidosPorMes] = useState('');
+
+    useEffect(() => {
+        readElements();
+    }, []);
+
+    const readElements = async () => {
+        try {
+            const responses = await Promise.all([
+                fillData({ php: 'zapatos', accion: 'readResumeAllZapatos' }),
+                fillData({ php: 'marcas', accion: 'readAll' }),
+            ]);
+
+            const [ responseShoe, responseMarcas] = responses;
+
+            if (Array.isArray(responseShoe) && responseShoe.length > 0) {
+                setZapatos(responseShoe);
+            } else {
+                //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+            }
+
+            if (Array.isArray(responseMarcas) && responseMarcas.length > 0) {
+                setMarcas(responseMarcas);
+            } else {
+                //Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
+            }
+
+        } catch (error) {
+            console.error('Error en leer los elementos:', error);
+            Alert.alert('Error', 'Hubo un error.');
+        }
     };
 
 
@@ -84,12 +129,31 @@ const Zapatos = ({navigation}) => {
                 <View style={styles.colMarcas}>
                     <Text texto='¿Te interesa alguna marca en especifico?' font='TTWeb-SemiBold' color='white' textAlign='center' />
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                        
+                    {marcas.map(marca => (
+                                <CardMarca key={marca.id_marca}
+                                    marcaData={{
+                                        foto: marca.foto_marca
+                                    }}
+                                    accionCard={handleBrandClick} />
+                            ))}
                     </ScrollView>
                 </View>
                 <View style={styles.colZapatos}>
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                        
+                    {zapatos.map(zapato => (
+                                <TouchableOpacity onPress={() => handleViewDetalle(zapato.id_zapato)}>
+                                    <CardZapato
+                                        key={zapato.id_zapato}
+                                        zapatoData={{
+                                            nombre: zapato.nombre_zapato,
+                                            genero: zapato.genero_zapato,
+                                            estrellas: zapato.estrellas,
+                                            precio: zapato.precio_unitario_zapato,
+                                            foto: zapato.foto_detalle_zapato
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            ))}
                     </ScrollView>
                 </View>
             </View>
