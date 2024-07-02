@@ -5,33 +5,31 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 
 export default function CardZapato({ accionCard, zapatoData }) {
     return (
-        <TouchableOpacity onPress={accionCard}>
-            <View style={styles.containerTotal}>
-                <View style={styles.container}>
-                    <View style={styles.containerImg}>
-                        <Image
-                            source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${zapatoData.foto}` }}
-                            style={styles.zapatoImg}
-                        />
+        <View style={styles.containerTotal}>
+            <View style={styles.container}>
+                <View style={styles.containerImg}>
+                    <Image
+                        source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${zapatoData.foto}` }}
+                        style={styles.zapatoImg}
+                    />
+                </View>
+                <View style={styles.containerText}>
+                    <View style={styles.text1}>
+                        <Text texto={`${zapatoData.nombre}`} fontSize={16} font='TTWeb-Bold' />
+                        <Text texto={`Zapato ${zapatoData.genero}`} color='#7D7D7D' />
                     </View>
-                    <View style={styles.containerText}>
-                        <View style={styles.text1}>
-                            <Text texto={`${zapatoData.nombre}`} fontSize={16} font='TTWeb-Bold' />
-                            <Text texto={`Zapato ${zapatoData.genero}`} color='#7D7D7D' />
+                    <View style={styles.text2}>
+                        <View style={styles.starGrap}>
+                            <Image
+                                source={require('../../img/icons/iconStar.png')}
+                            />
+                            <Text texto={`${zapatoData.estrellas || 0}`} fontSize={15} color='#FFA700' font='TTWeb-Bold' />
                         </View>
-                        <View style={styles.text2}>
-                            <View style={styles.starGrap}>
-                                <Image
-                                    source={require('../../img/icons/iconStar.png')}
-                                />
-                                <Text texto={`${zapatoData.estrellas || 0}`} fontSize={15} color='#FFA700' font='TTWeb-Bold' />
-                            </View>
-                            <Text texto={`$${zapatoData.precio}`} fontSize={16} font='TTWeb-Bold' />
-                        </View>
+                        <Text texto={`$${zapatoData.precio}`} fontSize={16} font='TTWeb-Bold' />
                     </View>
                 </View>
             </View>
-        </TouchableOpacity>
+        </View>
     );
 }
 

@@ -15,6 +15,7 @@ const Inicio = ({ navigation }) => {
     const [marcas, setMarcas] = useState([]);
     const [masVendido, setMasVendido] = useState('');
     const [userName, setUserName] = useState('');
+    const [cantdPedidos, setCantdPedidosPorMes] = useState('');
 
     useEffect(() => {
         readElements();
@@ -26,10 +27,17 @@ const Inicio = ({ navigation }) => {
                 fillData({ php: 'cliente', accion: 'readCliente' }),
                 fillData({ php: 'zapatos', accion: 'readAllEspecial' }),
                 fillData({ php: 'marcas', accion: 'readAll' }),
-                fillData({ php: 'zapatos', accion: 'readMasVendido' })
+                fillData({ php: 'zapatos', accion: 'readMasVendido' }),
+                fillData({ php: 'cliente', accion: 'readCantidadPedidosPorMes' })
             ]);
 
-            const [response, responseShoe, responseMarcas, responseShoeVendido] = responses;
+            const [response, responseShoe, responseMarcas, responseShoeVendido, responsePedidosPorMes] = responses;
+
+            if (responsePedidosPorMes) {
+                setCantdPedidosPorMes(responsePedidosPorMes);
+            } else {
+                Alert.alert('Error', 'No se pudo obtener los pedidos');
+            }
 
             if (response) {
                 setUserName(response.nombre_cliente);
@@ -40,13 +48,13 @@ const Inicio = ({ navigation }) => {
             if (Array.isArray(responseShoe) && responseShoe.length > 0) {
                 setZapatos(responseShoe);
             } else {
-                Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+                //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
             }
 
             if (Array.isArray(responseMarcas) && responseMarcas.length > 0) {
                 setMarcas(responseMarcas);
             } else {
-                Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
+                //Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
             }
 
             if (responseShoeVendido) {
@@ -62,14 +70,19 @@ const Inicio = ({ navigation }) => {
     };
 
     // Función para cambiar de pantalla
-    const handleViewDetalleMas = () => {
-        navigation.navigate('Detalle', { id_zapato: masVendido.id_zapato });
+    function handleViewDetalleMas() {
+        if (masVendido.id_zapato != null || masVendido.id_zapato != 0) {
+            navigation.navigate('Detalle', { id_zapato: masVendido.id_zapato });
+        }
     };
 
-    // Función para cambiar de pantalla
-    const handleViewDetalle = () => {
-        navigation.navigate('Detalle', { id_zapato: zapatos.id_zapato });
-    };
+    function handleViewDetalle(id_zapato) {
+        if (id_zapato != null || id_zapato != 0) {
+            navigation.navigate('Detalle', { id_zapato: id_zapato });
+            console.log(id_zapato);
+        }
+    }
+    
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
     const fila1Height = screenHeight * 0.60;
@@ -109,7 +122,7 @@ const Inicio = ({ navigation }) => {
                         </View>
                         <View style={styles.cardContainer}>
                             <View style={styles.cardHeader}>
-                                <Text texto='¡INCREIBLE! haz realizado un total de 69 pedidos de nuestros productos ¡en este mes de mayo!' fontSize={13} font='TTWeb-SemiBold' />
+                                <Text texto={`¡INCREIBLE! haz realizado un total de ${cantdPedidos.cantidad_pedidos} pedido/s de nuestros productos ¡en este mes de ${cantdPedidos.mes_actual}`} fontSize={13} font='TTWeb-SemiBold' />
                             </View>
                             <View style={styles.cardBody}>
                                 <Text texto='Par más vendido en este mes' color='#252525' />
@@ -117,7 +130,7 @@ const Inicio = ({ navigation }) => {
                                     <Image
                                         source={masVendido.foto_detalle_zapato ?
                                             { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${masVendido.foto_detalle_zapato}` }
-                                            : require('../../img/zapatos/shoeDefault.png')}
+                                            : require('../../img/defaultImage.png')}
                                         style={styles.shoeImg}
                                     />
                                 </TouchableOpacity>
@@ -146,14 +159,18 @@ const Inicio = ({ navigation }) => {
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
                             {zapatos.map(zapato => (
-                                <CardZapato key={zapato.id_zapato}
-                                    zapatoData={{
-                                        nombre: zapato.nombre_zapato,
-                                        genero: zapato.genero_zapato,
-                                        estrellas: zapato.estrellas,
-                                        precio: zapato.precio_unitario_zapato,
-                                        foto: zapato.foto_detalle_zapato
-                                    }} />
+                                <TouchableOpacity onPress={() => handleViewDetalle(zapato.id_zapato)}>
+                                    <CardZapato
+                                        key={zapato.id_zapato}
+                                        zapatoData={{
+                                            nombre: zapato.nombre_zapato,
+                                            genero: zapato.genero_zapato,
+                                            estrellas: zapato.estrellas,
+                                            precio: zapato.precio_unitario_zapato,
+                                            foto: zapato.foto_detalle_zapato
+                                        }}
+                                    />
+                                </TouchableOpacity>
                             ))}
                         </ScrollView>
                     </View>

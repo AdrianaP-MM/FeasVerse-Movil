@@ -2,16 +2,16 @@ import React from 'react';
 import Text from '../utils/Text';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
-export default function CardCita({ }) {
+export default function CardResena({resenaData}) {
     return (
         <View style={styles.containerTotal}>
             <View style={styles.cardHeader}>
-                <Text texto='Margarita Osorio' />
-                <Text texto='05/02/2024' color='#8F8F8F' />
+                <Text texto={`${resenaData.nombre}`} />
+                <Text texto={`${resenaData.fecha}`} />
             </View>
             <View style={styles.cardBody}>
-                <Text texto='¡Muy buen zapato!' font='TTWeb-SemiBold' fontSize={15} />
-                <Text texto='El mejor zapato que he probado en mi vida, muy buen diseño bla bla bla bla bla bla....' />
+                <Text texto={`${resenaData.titulo}`} font='TTWeb-SemiBold' fontSize={15} />
+                <Text texto={`${resenaData.cuerpo}`}  />
             </View>
             <View style={styles.cardFooter}>
                 <Image

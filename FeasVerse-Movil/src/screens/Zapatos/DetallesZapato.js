@@ -8,37 +8,126 @@ import CardResena from '../../components/zapatos/CardResena'
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import { fillData } from '../../utils/fillData';
+import Input from '../../components/inputs/AllBorders'
 
 const Zapatos = ({ route }) => {
     const { id_zapato } = route.params;
-    const [selectedValue, setSelectedValue] = useState('');
-    const [infoZapato, setInfo] = useState([]);
+    const [selectedColor, setSelectedValue] = useState(0);
+    const [infoZapato, setInfo] = useState('');
+    const [coloresZapato, setColores] = useState([]);
+    const [tallasZapato, setTallas] = useState([]);
+    const [resenasZapato, setResenas] = useState([]);
+
+    const [selectedTalla, setSelectedTalla] = useState(0);
+    const [cantidad, setCantidad] = useState(0);
+
+    const handleSelect = (talla) => {
+        setSelectedTalla(talla);
+        console.log('Talla:', talla);
+    };
 
     useEffect(() => {
         readZapato();
         //console.log(infoZapato);
     }, []);
 
-
     const readZapato = async () => {
         try {
             // Crear y llenar el formData
             const formData = new FormData();
             formData.append('id_zapato', id_zapato);
+            console.log('id zapato: ', id_zapato);
 
-            // Llamar a fillData y esperar la respuesta
-            const response = await fillData({
+            // Realizar las solicitudes de manera concurrente
+            const [responseZapato, responseColores, responseTallas, responseRenas] = await Promise.all([
+                fillData({
+                    php: 'zapatos',
+                    accion: 'readOneDetail',
+                    method: 'POST',
+                    formData: formData
+                }),
+                fillData({
+                    php: 'zapatos',
+                    accion: 'readOneColoresZapato',
+                    method: 'POST',
+                    formData: formData
+                }),
+                fillData({
+                    php: 'zapatos',
+                    accion: 'readOneTallas',
+                    method: 'POST',
+                    formData: formData
+                }),
+                fillData({
+                    php: 'zapatos',
+                    accion: 'readOneReseñas',
+                    method: 'POST',
+                    formData: formData
+                })
+            ]);
+
+            // Validar la respuesta de zapatos
+            if (responseZapato) {
+                setInfo(responseZapato);
+            } else {
+                Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+            }
+
+            // Validar y usar la respuesta de colores
+            if (responseColores) {
+                setColores(responseColores);
+            } else {
+                //Alert.alert('No se pudo obtener los colores o no hay colores disponibles.');
+                console.log('No se pudo obtener los colores o no hay colores disponibles.');
+            }
+
+            if (responseTallas) {
+                setTallas(responseTallas);
+            } else {
+                //Alert.alert('No se pudo obtener las tallas o no hay tallas disponibles.');
+                console.log('No se pudo obtener las tallas o no hay tallas disponibles');
+            }
+
+            if (Array.isArray(responseRenas) && responseRenas.length > 0) {
+                setResenas(responseRenas);
+            } else {
+                //Alert.alert('No hay reseñas disponibles.');
+                console.log('No hay reseñas disponibles');
+            }
+
+        } catch (error) {
+            console.error('Error en leer los elementos:', error);
+            //Alert.alert('Error', 'Hubo un error.');
+        }
+    };
+
+    const readTallasPorColor = async (id_color) => {
+        try {
+            setSelectedTalla(0);
+            console.log('Talla:', selectedTalla);
+            setSelectedValue(id_color);
+            // Crear y llenar el formData
+            const formData = new FormData();
+            formData.append('id_zapato', id_zapato);
+            formData.append('id_color', id_color);
+            console.log('id zapato y clr:', id_zapato, id_color);
+
+            // Definir la acción en función de id_color
+            const accion = id_color != 0 ? 'readTallasDisponiblesForColor' : 'readOneTallas';
+
+            // Realizar la solicitud
+            const responseTallas = await fillData({
                 php: 'zapatos',
-                accion: 'readOneDetail',
+                accion: accion,
                 method: 'POST',
                 formData: formData
             });
 
-            if (Array.isArray(response) && response.length > 0) {
-                setInfo(response);
-                console.log(response);
+            // Validar y usar la respuesta de tallas
+            if (responseTallas) {
+                setTallas(responseTallas);
             } else {
-                Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+                Alert.alert('No se pudo obtener las tallas o no hay tallas disponibles.');
             }
 
         } catch (error) {
@@ -47,6 +136,123 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    const readDetalle = async () => {
+        try {
+            // Crear y llenar el formData
+            const formData = new FormData();
+            formData.append('id_zapato', id_zapato);
+            formData.append('id_color', selectedColor);
+            formData.append('id_talla', selectedTalla);
+            console.log('id zapato, clr y talla:', id_zapato, selectedColor, selectedTalla);
+
+            // Realizar la solicitud
+            const responseDetalle = await fillData({
+                php: 'zapatos',
+                accion: 'searchDetalle',
+                method: 'POST',
+                formData: formData
+            });
+
+            // Validar y usar la respuesta de tallas
+            if (responseDetalle) {
+                return responseDetalle.id_detalle_zapato;
+            } else {
+                Alert.alert('No se pudo obtener el detalle');
+                return null;
+            }
+
+        } catch (error) {
+            console.error('Error en leer el detalle:', error);
+            Alert.alert('Error', 'Hubo un error.');
+            return null;
+        }
+    };
+
+    const readCantidad = async (id_detalle_zapato) => {
+        try {
+            // Crear y llenar el formData
+            const formData = new FormData();
+            formData.append('id_detalle_zapato', id_detalle_zapato);
+
+            // Realizar la solicitud
+            const responseCantidad = await fillData({
+                php: 'zapatos',
+                accion: 'validationCantidad',
+                method: 'POST',
+                formData: formData
+            });
+
+            // Validar y usar la respuesta de tallas
+            if (responseCantidad) {
+                return responseCantidad.cantidad_zapato;
+            } else {
+                Alert.alert('No se pudo obtener la cantidad');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error en leer los elementos:', error);
+            Alert.alert('Error', 'Hubo un error.');
+        }
+    };
+
+    const ceateDetallePedido = async () => {
+        try {
+            console.log('Talla final: ', selectedTalla, 'Color final: ', selectedColor, 'Cantidad final: ', cantidad);
+
+            let id_detalle = await readDetalle(); // Espera a que readDetalle termine y devuelva el resultado
+
+            if (id_detalle > 0) {
+                console.log('Detalle encontrado: ', id_detalle);
+                let cantidadBase = await readCantidad(id_detalle);
+                if (cantidad <= 0) {
+                    Alert.alert('Advertencia', 'Por favor, ingrese una cantidad a pedir');
+                }
+                else {
+                    if (cantidad > cantidadBase) {
+                        Alert.alert('La cantidad supera el stock', `Ingrese otra cantidad, nuestro stock actual de este zapato con esa talla y color es: ${cantidadBase}`);
+                    }
+                    else {
+                        try {
+                            // Crear y llenar el formData
+                            const formData = new FormData();
+                            formData.append('cantidad_pedido', cantidad);
+                            formData.append('id_detalle_zapato', id_detalle);
+                            formData.append('precio_del_zapato', infoZapato.precio_unitario_zapato);
+
+                            // Realizar la solicitud
+                            const responseInsert = await fillData({
+                                php: 'pedidos',
+                                accion: 'createDetallePedido',
+                                method: 'POST',
+                                formData: formData
+                            });
+
+                            // Validar y usar la respuesta de tallas
+                            if (responseInsert) {
+                                Alert.alert('¡Se ha agregado al carrito!', 'El zapato ha sido exitosamente añadido al carrito de compras.');
+                                readZapato();
+                                setSelectedTalla(0);
+                                setSelectedValue(0);
+                                setCantidad('');
+                            } else {
+                                Alert.alert('No se pudo insertar al carrito');
+                            }
+                        } catch (error) {
+                            console.error('Error en insertar los elementos:', error);
+                            Alert.alert('Algo salió mal', 'No se puedo agregar al carrito error: ', error);
+                        }
+                    }
+                }
+
+            } else {
+                Alert.alert('Advertencia', 'Por favor, seleccione un color y una talla');
+            }
+
+        } catch (error) {
+            console.error('Error en insertar el pedido:', error);
+            Alert.alert('Error', 'Hubo un error.');
+        }
+    };
 
     return (
         <ScrollView style={styles.contenedorTotal}>
@@ -55,39 +261,43 @@ const Zapatos = ({ route }) => {
                 <View style={styles.zapatoInfo}>
                     <View style={styles.colImg}>
                         <Image
-                            source={infoZapato[0].foto_detalle_zapato ?
-                                { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${infoZapato[0].foto_detalle_zapato})` }
-                                : require('../../img/zapatos/shoeDefault.png')}
+                            source={infoZapato.foto_detalle_zapato ?
+                                { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${infoZapato.foto_detalle_zapato}` }
+                                : require('../../img/defaultImage.png')}
                             style={styles.shoeImg}
                         />
                     </View>
                     <View style={styles.colInfo}>
                         <View style={styles.shoeHeader}>
-                            <Text texto={`${infoZapato[0].nombre_zapato}`} font='TTWeb-Regular' fontSize={24} />
+                            <Text texto={`${infoZapato.nombre_zapato}`} font='TTWeb-Regular' fontSize={24} />
                             <Text texto={`${infoZapato.genero_zapato}`} font='TTWeb-SemiBold' color='#7D7D7D' />
                         </View>
                         <View style={styles.shoeBody}>
-                            <Text texto='$285' fontSize={20} font='TTWeb-Bold' />
+                            <Text texto={`$${infoZapato.precio_unitario_zapato}`} fontSize={20} font='TTWeb-Bold' />
                             <View style={styles.starGrap}>
                                 <Image
                                     source={require('../../img/icons/iconStar.png')}
                                 />
-                                <Text texto='5' fontSize={20} color='#FFA700' font='TTWeb-Bold' />
+                                <Text texto={`${infoZapato.estrellas || 0}`} fontSize={15} color='#FFA700' font='TTWeb-Bold' />
                             </View>
                         </View>
                         <View style={styles.shoeFooter}>
                             <Text texto='Colores disponibles' font='TTWeb-Light' color='#7D7D7D' />
                             <View style={styles.pickerContainer}>
                                 <Picker
-                                    selectedValue={selectedValue}
+                                    selectedValue={selectedColor}
                                     style={styles.picker}
                                     itemStyle={styles.pickerItem}
-                                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                                    onValueChange={(itemValue) => {
+                                        setSelectedValue(itemValue);
+                                        console.log('Color seleccionado:', itemValue);
+                                        readTallasPorColor(itemValue);
+                                    }}
                                 >
                                     <Picker.Item label="Colores" value="0" />
-                                    <Picker.Item label="Rojo" value="1" />
-                                    <Picker.Item label="Amarillo" value="2" />
-                                    <Picker.Item label="Azul" value="3" />
+                                    {coloresZapato.map((color) => (
+                                        <Picker.Item key={color.id_color} label={color.nombre_color} value={color.id_color} />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -96,26 +306,34 @@ const Zapatos = ({ route }) => {
                 <View style={styles.zapatoDesc}>
                     <Text texto='Descripción' font='TTWeb-SemiBold' fontSize={18} />
                     <Text color='white' />
-                    <Text texto='Zapatos de tacón alto de alta calidad y atractivos. Nos especializamos en tallas grandes, llegando hasta la talla italiana 46. Diseñados para mujeres altas, hombres que disfrutan de usar tacones y cualquier persona que ame lucir zapatos de tacón alto. Nuestra colección ofrece elegancia y comodidad, con atención especial a los detalles y un enfoque inclusivo que celebra la diversidad de estilos y tallas. Descubre la moda sin límites con nuestros zapatos que combinan estilo y sofisticación, ideales para aquellos que desean destacar con confianza en cualquier ocasión.'
+                    <Text texto={`${infoZapato.descripcion_zapato}`}
                         font='TTWeb-Regular' />
                 </View>
                 <View style={styles.zapatoTallas}>
                     <Text texto='Tallas' font='TTWeb-SemiBold' fontSize={18} />
                     <ScrollView style={styles.innerScrollView} contentContainerStyle={styles.row}>
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
-                        <Talla />
+                        {tallasZapato.map(talla => (
+                            <Talla
+                                key={talla.id_talla}
+                                tallaData={{
+                                    talla: talla.num_talla,
+                                    id_talla: talla.id_talla
+                                }}
+                                isSelected={talla.id_talla === selectedTalla}
+                                onSelect={handleSelect}
+                            />
+                        ))}
                     </ScrollView>
                 </View>
                 <View style={styles.contenedorBoton}>
-                    <Button textoBoton='Agregar al Carrito' width='80%' />
+                    <Input
+                        placeholder='Cantidad'
+                        width='80%'
+                        keyboardType='numeric'
+                        onChangeText={setCantidad}
+                        value={cantidad}
+                    />
+                    <Button textoBoton='Agregar al Carrito' width='80%' accionBoton={ceateDetallePedido} />
                 </View>
             </View>
             <View style={styles.contenedorResenas}>
@@ -123,16 +341,16 @@ const Zapatos = ({ route }) => {
                     <Text texto='Reseñas' font='TTWeb-SemiBold' fontSize={18} color='white' />
                 </View>
                 <ScrollView style={styles.innerScrollView2} contentContainerStyle={styles.col}>
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
-                    <CardResena />
+                    {resenasZapato.map(resena => (
+                        <CardResena key={resena.id_comentario}
+                            resenaData={{
+                                nombre: resena.nombre_cliente,
+                                fecha: resena.fecha_del_comentario,
+                                titulo: resena.titulo_comentario,
+                                cuerpo: resena.descripcion_comentario,
+                                estrellas: resena.calificacion_comentario
+                            }} />
+                    ))}
                 </ScrollView>
             </View>
         </ScrollView>
@@ -174,7 +392,7 @@ const styles = StyleSheet.create({
     },
     innerScrollView: {
         width: '90%',
-        maxHeight: 250,
+        //maxHeight: 250,
         paddingTop: 15
     },
     zapatoTallas: {
@@ -182,7 +400,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         paddingVertical: 20,
         paddingHorizontal: 10,
-        maxHeight: 250,
+        //maxHeight: 250,
+        flex: 1,
 
         shadowColor: '#000', // Color de la sombra
         shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra

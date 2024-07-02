@@ -2,13 +2,20 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import Text from '../../components/utils/Text';
 
-export default function Button({ text, action_button }) {
+export default function Button({ action_button, tallaData, isSelected, onSelect }) {
+    const handlePress = () => {
+        onSelect(tallaData.id_talla);
+        if (action_button) {
+            action_button();
+        }
+    };
+
     return (
         <TouchableOpacity
-            style={styles.Pastilla}
-            onPress={action_button}
+            style={[styles.Pastilla, isSelected && styles.PastillaSelected]}
+            onPress={handlePress}
         >
-            <Text texto='30' fontSize={16} />
+            <Text texto={`${tallaData.talla}`} style={isSelected ? styles.TextSelected : styles.Text} fontSize={16} />
         </TouchableOpacity>
     );
 }
@@ -22,6 +29,14 @@ const styles = StyleSheet.create({
         borderColor: '#7D7D7D',
         margin: 9,
     },
+    PastillaSelected: {
+        backgroundColor: '#1591CC',
+        borderColor: '#1591CC',
+    },
+    Text: {
+        color: '#7D7D7D',
+    },
+    TextSelected: {
+        color: 'white',
+    },
 });
-
-
