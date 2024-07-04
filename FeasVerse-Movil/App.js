@@ -32,6 +32,27 @@ const App = () => {
         return JSON.parse(text);
     };
 
+    
+const comprobarCarrito = async () => {
+    const DATA0 = await fetchData('services/publica/carrito.php', 'readAllCarrito');
+
+    if (DATA0.status) {
+        console.log('Si hay carrito');
+    }
+    else {
+        const FORM1 = new FormData();
+        FORM1.append('estado_pedido', 4);
+
+        const DATA2 = await fetchData('services/publica/carrito.php', 'createRow', FORM1);
+
+        if (DATA2.status) {
+            sweetAlert(4, DATA.error, true);
+        } else {
+            sweetAlert(4, DATA.error, true);
+        }
+    }
+}
+
     const [fontsLoaded] = useFonts({
         'TTWeb-Black': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Black.ttf'),
         'TTWeb-Bold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Bold.ttf'),
@@ -46,6 +67,11 @@ const App = () => {
                 if (fontsLoaded) {
                     const DATA = await fetchData('services/publica/cliente.php', 'getUser');
                     if (DATA.session) {
+                        console.log('-------------------------------------------------------------------');
+                        console.log('-------------------------------------------------------------------');
+                        console.log('-------------------------------------------------------------------');
+                        console.log('-------------------------------------------------------------------');
+                        comprobarCarrito();
                         setInitialRoute('Inicio');
                     }
                     setAppIsReady(true);
