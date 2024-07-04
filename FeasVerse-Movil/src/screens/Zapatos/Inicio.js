@@ -17,8 +17,29 @@ const Inicio = ({ navigation }) => {
     const [userName, setUserName] = useState('');
     const [cantdPedidos, setCantdPedidosPorMes] = useState('');
 
+    const comprobarCarrito = async () => {
+        const DATA0 = await fetchData('services/publica/carrito.php', 'readAllCarrito');
+
+        if (DATA0.status) {
+            console.log('Si hay carrito');
+        }
+        else {
+            const FORM1 = new FormData();
+            FORM1.append('estado_pedido', 4);
+
+            const DATA2 = await fetchData('services/publica/carrito.php', 'createRow', FORM1);
+
+            if (DATA2.status) {
+                sweetAlert(4, DATA.error, true);
+            } else {
+                sweetAlert(4, DATA.error, true);
+            }
+        }
+    }
+
     useEffect(() => {
         readElements();
+        comprobarCarrito();
     }, []);
 
     const readElements = async () => {
