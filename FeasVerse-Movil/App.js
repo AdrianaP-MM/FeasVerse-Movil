@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet } from 'react-native';
+import SplashScreen1 from './src/screens/SplashScreen1';
 import Correo from './src/screens/restablecer/Correo';
 import Code from './src/screens/restablecer/Code';
 import NewPassword from './src/screens/restablecer/NewPassword';
@@ -18,16 +18,13 @@ import Navigator from './src/Navigator/TabNavigator';
 import Configuraciones from './src/screens/configuraciones/Configuraciones';
 import { Config } from './src/utils/constantes';
 
-// Crear un navegador de pila
 const Stack = createStackNavigator();
 
 const App = () => {
-    // Estado para rastrear si la aplicación está lista
     const [appIsReady, setAppIsReady] = useState(false);
-    // Estado para establecer la ruta inicial
+    const [splashScreenIndex, setSplashScreenIndex] = useState(1);
     const [initialRoute, setInitialRoute] = useState('LogIn');
 
-    // Función para obtener datos de una API
     const fetchData = async (api, action, formData = null) => {
         const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
@@ -36,7 +33,6 @@ const App = () => {
         return JSON.parse(text);
     };
 
-    // Función para comprobar el carrito
     const comprobarCarrito = async () => {
         const DATA0 = await fetchData('services/publica/carrito.php', 'readAllCarrito');
 
@@ -54,9 +50,8 @@ const App = () => {
                 sweetAlert(4, DATA.error, true);
             }
         }
-    }
+    };
 
-    // Cargar fuentes personalizadas
     const [fontsLoaded] = useFonts({
         'TTWeb-Black': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Black.ttf'),
         'TTWeb-Bold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Bold.ttf'),
@@ -65,7 +60,6 @@ const App = () => {
         'TTWeb-SemiBold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-SemiBold.ttf'),
     });
 
-    // Hook useEffect para preparar la aplicación
     useEffect(() => {
         async function prepareApp() {
             try {
@@ -84,12 +78,31 @@ const App = () => {
         prepareApp();
     }, [fontsLoaded]);
 
-    // Si la aplicación no está lista, devolver null
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSplashScreenIndex(prevIndex => prevIndex + 1);
+        }, 5000); // Cambia el intervalo según lo que necesites
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+    const handleSplashScreenFinish = () => {
+        if (splashScreenIndex === 3) {
+            setAppIsReady(true);
+        }
+    };
+
     if (!appIsReady) {
-        return null;
+        switch (splashScreenIndex) {
+            case 1:
+                return <SplashScreen1 onFinish={handleSplashScreenFinish} />;
+            default:
+                return null;
+        }
     }
 
-    // Renderizar el contenedor de navegación con el navegador de pila
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
@@ -109,16 +122,5 @@ const App = () => {
         </NavigationContainer>
     );
 };
-
-// Estilos para el contenedor
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
 export default App;

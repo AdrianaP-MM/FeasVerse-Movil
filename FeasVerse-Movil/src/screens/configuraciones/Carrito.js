@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dim
 import { Ionicons } from '@expo/vector-icons';
 import ProductCard from '../../components/Cards/ProductCard'; // Importa el componente ProductCard
 import { Colors, FontSizes, Config } from '../../utils/constantes';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 // URL de la API de zapatos
@@ -61,10 +62,12 @@ const Carrito = ({ navigation }) => {
     };
 
     // Efecto para cargar los datos del carrito
-    useEffect(() => {
-        fetchUsuario();
-        fetchCartData();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUsuario();
+            fetchCartData();
+        }, [])
+    );
 
     // Función para obtener los datos del carrito
     const fetchCartData = async () => {
@@ -222,12 +225,12 @@ const Carrito = ({ navigation }) => {
     
                         const updateData = await fetchData(CARRITO_API, 'update', formData);
                         if (updateData.status) {
-                            showModal('Compra realizada con éxito');
-                            fetchCartData(); // Vuelve a cargar el carrito
+                            Alert.alert('Compra realizada con éxito');
+                            navigation.navigate('Configuraciones');
                         } else {
                             if (updateData.message === 'Acceso denegado') {
                                 sweetAlert(3, 'Debes de iniciar sesión', false);
-                                navigation.navigate('Login');
+                                navigation.navigate('LogIn');
                             } else {
                                 showModal(updateData.error);
                             }
