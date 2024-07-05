@@ -184,5 +184,5 @@ const styles = StyleSheet.create({
     },
 });
 
-// Exportar el componente Configuracioness
+// Exportar el componente Configuraciones
 export default Configuraciones;

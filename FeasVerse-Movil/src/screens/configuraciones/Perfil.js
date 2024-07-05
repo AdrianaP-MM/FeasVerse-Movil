@@ -429,5 +429,5 @@ const styles = StyleSheet.create({
     },
 });
 
-// Exportar el componente Perfils
+// Exportar el componente Perfil
 export default Perfil;
