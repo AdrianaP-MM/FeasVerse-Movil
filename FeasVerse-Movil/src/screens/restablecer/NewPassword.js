@@ -27,6 +27,7 @@ const NewPassword = ({ route, navigation }) => {
             return;
         }
 
+        // Creamos un objeto FormData para enviar los datos al servidor
         const formData = new FormData();
         formData.append('idCliente', id);
         formData.append('claveCliente', password);
@@ -52,6 +53,7 @@ const NewPassword = ({ route, navigation }) => {
         }
     };
 
+    // Estructura de la pantalla
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -129,4 +131,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente NewPassword
 export default NewPassword;

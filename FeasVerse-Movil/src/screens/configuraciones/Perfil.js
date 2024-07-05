@@ -4,8 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import TextInputC from '../../components/inputs/Border_Down';
 
+// para conseguir el width de la pantalla
 const { width } = Dimensions.get('window');
 
+// Componente funcional Perfil
 const Perfil = ({ navigation }) => {
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
@@ -27,10 +29,12 @@ const Perfil = ({ navigation }) => {
     const [modalDireccion, setModalDireccion] = useState('');
     const [modalID, setModalID] = useState('');
 
+    // Función para cargar los datos del usuario
     useEffect(() => {
         fetchUsuario();
     }, []);
 
+    // Función para obtener los datos del usuario
     const fetchUsuario = () => {
         setLoading(true);
         fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
@@ -59,6 +63,7 @@ const Perfil = ({ navigation }) => {
             });
     };
 
+    // Función para editar los datos del usuario
     const handleEdit = async () => {
         try {
             const formData = new FormData();
@@ -96,7 +101,7 @@ const Perfil = ({ navigation }) => {
         }
     };
 
-
+    // Verificar si la carga de datos está en proceso
     if (loading) {
         return (
             <View style={styles.loader}>
@@ -106,6 +111,7 @@ const Perfil = ({ navigation }) => {
         );
     }
 
+    // Función para abrir el modal de edición
     const openModal = () => {
         setModalNombre(nombre);
         setModalApellido(apellido);
@@ -118,10 +124,12 @@ const Perfil = ({ navigation }) => {
         setIsModalVisible(true);
     };
 
+    // Función para cerrar el modal de edición
     const closeModal = () => {
         setIsModalVisible(false);
     };
 
+    // Estructura de la pantalla
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
@@ -270,6 +278,7 @@ const Perfil = ({ navigation }) => {
     );
 };
 
+// Estilos para los componentes de la pantalla
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -420,4 +429,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente Perfils
 export default Perfil;

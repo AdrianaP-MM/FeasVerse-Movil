@@ -5,6 +5,7 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+// Componente funcional Registrarse
 const Registrarse = ({ navigation }) => {
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
@@ -15,14 +16,16 @@ const Registrarse = ({ navigation }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [direccion, setDireccion] = useState('');
     const [clave, setClave] = useState('');
-    const [claveconfirmada, setCofirmarClave] = useState('');
+    const [claveconfirmada, setConfirmarClave] = useState('');
     const [registro, setFechaRegistro] = useState(new Date());
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
+    // Función para navegar a la pantalla de inicio de sesión
     const handelViewLogIn = () => {
         navigation.navigate('LogIn');
     };
 
+    // Cargar fuentes personalizadas cuando el componente se monta
     useEffect(() => {
         const loadFonts = async () => {
             await Font.loadAsync({
@@ -35,23 +38,26 @@ const Registrarse = ({ navigation }) => {
         };
         loadFonts();
 
-        // Set the registration date to the current date when the component mounts
+        // Establecer la fecha de registro a la fecha actual al montar el componente
         setFechaRegistro(new Date());
     }, []);
 
+    // Mostrar una vista vacía mientras se cargan las fuentes
     if (!fontsLoaded) {
         return <View />;
     }
 
+    // Manejar el cambio de fecha en el selector de fecha
     const handleDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || nacimiento;
         setShowPicker(false);
         setNacimiento(currentDate);
     };
 
+    // Validar que el usuario sea mayor de 18 años
     const validarEdad = () => {
         const hoy = new Date();
-        const edad = hoy.getFullYear() - nacimiento.getFullYear();
+        let edad = hoy.getFullYear() - nacimiento.getFullYear();
         const mes = hoy.getMonth() - nacimiento.getMonth();
         if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
             edad--;
@@ -59,6 +65,7 @@ const Registrarse = ({ navigation }) => {
         return edad >= 18;
     };
 
+    // Manejar el registro del usuario
     const handlerRegistrar = async () => {
         if (!validarEdad()) {
             Alert.alert('Error', 'Debes ser mayor de 18 años para registrarte.');
@@ -87,13 +94,13 @@ const Registrarse = ({ navigation }) => {
         if (datos.status) {
             Alert.alert('Te has registrado correctamente');
             handelViewLogIn();
-            console.log(datos)
         } else {
             console.log(datos);
             Alert.alert('Error de sesión', datos.error);
         }
     };
 
+    // Estructura de la pantalla
     return (
         <View style={styles.container}>
             <Text style={styles.textTitle}>Registrarse</Text>
@@ -173,7 +180,7 @@ const Registrarse = ({ navigation }) => {
             <TextInputC
                 label="Confirma tu contraseña"
                 valor={claveconfirmada}
-                setValor={setCofirmarClave}
+                setValor={setConfirmarClave}
                 keyboardType="default"
                 placeholder="Confirma tu contraseña"
                 secureTextEntry={true}
@@ -193,6 +200,7 @@ const Registrarse = ({ navigation }) => {
     );
 };
 
+// Estilos para los componentes de la pantalla
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -241,4 +249,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente
 export default Registrarse;

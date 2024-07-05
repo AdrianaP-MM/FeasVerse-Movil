@@ -4,26 +4,31 @@ import TextInputC from '../../components/inputs/Border_Down';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 
+// Importar el componente de inicio de sesión
 const logoImg = require("../../img/LogoFeasVerse.png");
 
+// Componente funcional LogIn
 const LogIn = ({ logueado, setLogueado, navigation }) => {
     const [correo, setCorreo] = useState('');
     const [clave, setClave] = useState('');
     const [fontsLoaded, setFontsLoaded] = useState(false);
 
-    // Función para cambiar de pantalla
+    // Función para cambiar de pantalla a 'Inicio'
     const handelViewInicio = () => {
         navigation.navigate('Inicio'); 
     };
 
+    // Función para cambiar de pantalla a 'Correo' (restablecer contraseña)
     const handelViewRestablecer = () => {
         navigation.navigate('Correo'); 
     };
 
+    // Función para cambiar de pantalla a 'Registrarse'
     const handelViewRegistrar = () => {
         navigation.navigate('Registrarse'); 
     };
 
+    // Cargar fuentes personalizadas al montar el componente
     useEffect(() => {
         const loadFonts = async () => {
             await Font.loadAsync({
@@ -39,47 +44,48 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
         loadFonts();
     }, []);
 
+    // Mostrar una vista vacía mientras se cargan las fuentes
     if (!fontsLoaded) {
         return <View />;
     }
 
+    // Manejar el inicio de sesión
     const handlerLogin = async () => {
         let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logIn`;
         const formData = new FormData();
-        formData.append('correo', correo)
-        formData.append('clave', clave)
+        formData.append('correo', correo);
+        formData.append('clave', clave);
 
-        //Realizar la petición http 
+        // Realizar la petición HTTP
         const fetchApi = await fetch(url, {
             method: 'POST',
             body: formData
-        })
+        });
         const datos = await fetchApi.json();
         if (datos.status) {
-            Alert.alert('Has iniciado correctamente sesion');
+            Alert.alert('Has iniciado correctamente sesión');
             handelViewInicio();
-        }
-        else {
+        } else {
             console.log(datos);
-            Alert.alert('Error de sesion', datos.error);
+            Alert.alert('Error de sesión', datos.error);
         }
     };
 
+    // Manejar el cierre de sesión
     const handleLogOut = async () => {
         const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
-        //Realizar la petición http 
-        const fetchApi = await fetch(url)
+        // Realizar la petición HTTP
+        const fetchApi = await fetch(url);
         const datos = await fetchApi.json();
         if (datos.status) {
-            setLogueado(false)
-        }
-        else {
+            setLogueado(false);
+        } else {
             console.log(datos);
-            // Alert the user about the error
-            Alert.alert('Error sesion', datos.error);
+            Alert.alert('Error de sesión', datos.error);
         }
-    }
+    };
 
+    // Estructura de la pantalla
     return (
         <View style={styles.container}>
             <Image source={logoImg} style={styles.logo} />
@@ -130,6 +136,7 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
     );
 };
 
+// Estilos para los componentes del inicio de sesión
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -171,7 +178,6 @@ const styles = StyleSheet.create({
         color: Colors.pass,
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
-        
     },
     link: {
         color: Colors.TituloL,
@@ -183,15 +189,14 @@ const styles = StyleSheet.create({
         color: Colors.pass,
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
-        marginTop: 50
-        
+        marginTop: 50,
     },
     link1: {
         color: Colors.TituloL,
         fontSize: FontSizes.medium,
         fontFamily: 'Regular',
         marginLeft: 5,
-        marginTop: 50
+        marginTop: 50,
     },
     text2: {
         marginTop: 100,
@@ -200,4 +205,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente
 export default LogIn;

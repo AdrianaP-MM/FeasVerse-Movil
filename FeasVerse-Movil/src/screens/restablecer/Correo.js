@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import CustomTextInput from '../../components/inputs/CustomTextInput '; // Importamos nuestro componente CustomTextInput
 
+// Componente funcional Correo
 const Correo = ({ navigation }) => {
     const [email, setEmail] = useState(''); // Estado para almacenar el correo electrónico ingresado
     const [isValidEmail, setIsValidEmail] = useState(false); // Estado para verificar si el correo es válido
@@ -166,4 +167,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente Correo
 export default Correo;

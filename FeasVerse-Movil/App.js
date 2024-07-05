@@ -18,12 +18,16 @@ import Navigator from './src/Navigator/TabNavigator';
 import Configuraciones from './src/screens/configuraciones/Configuraciones';
 import { Config } from './src/utils/constantes';
 
+// Crear un navegador de pila
 const Stack = createStackNavigator();
 
 const App = () => {
+    // Estado para rastrear si la aplicación está lista
     const [appIsReady, setAppIsReady] = useState(false);
+    // Estado para establecer la ruta inicial
     const [initialRoute, setInitialRoute] = useState('LogIn');
 
+    // Función para obtener datos de una API
     const fetchData = async (api, action, formData = null) => {
         const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
@@ -32,14 +36,13 @@ const App = () => {
         return JSON.parse(text);
     };
 
-    
+    // Función para comprobar el carrito
     const comprobarCarrito = async () => {
         const DATA0 = await fetchData('services/publica/carrito.php', 'readAllCarrito');
 
         if (DATA0.status) {
             console.log('Si hay carrito');
-        }
-        else {
+        } else {
             const FORM1 = new FormData();
             FORM1.append('estado_pedido', 4);
 
@@ -53,6 +56,7 @@ const App = () => {
         }
     }
 
+    // Cargar fuentes personalizadas
     const [fontsLoaded] = useFonts({
         'TTWeb-Black': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Black.ttf'),
         'TTWeb-Bold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-Bold.ttf'),
@@ -61,6 +65,7 @@ const App = () => {
         'TTWeb-SemiBold': require('../FeasVerse-Movil/assets/fonts/TitilliumWeb-SemiBold.ttf'),
     });
 
+    // Hook useEffect para preparar la aplicación
     useEffect(() => {
         async function prepareApp() {
             try {
@@ -79,10 +84,12 @@ const App = () => {
         prepareApp();
     }, [fontsLoaded]);
 
+    // Si la aplicación no está lista, devolver null
     if (!appIsReady) {
         return null;
     }
 
+    // Renderizar el contenedor de navegación con el navegador de pila
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
@@ -103,6 +110,7 @@ const App = () => {
     );
 };
 
+// Estilos para el contenedor
 const styles = StyleSheet.create({
     container: {
         width: '100%',

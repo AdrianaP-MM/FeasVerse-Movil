@@ -10,27 +10,32 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 import { fillData } from '../../utils/fillData';
 import Input from '../../components/inputs/AllBorders'
 
+// Función para mostrar la pantalla de detalles de un zapato
 const Zapatos = ({ route }) => {
+    // Obtener el id del zapato de la ruta
     const { id_zapato } = route.params;
+    // Estados para rastrear el color y la talla seleccionados
     const [selectedColor, setSelectedValue] = useState(0);
     const [infoZapato, setInfo] = useState('');
     const [coloresZapato, setColores] = useState([]);
     const [tallasZapato, setTallas] = useState([]);
     const [resenasZapato, setResenas] = useState([]);
-
     const [selectedTalla, setSelectedTalla] = useState(0);
     const [cantidad, setCantidad] = useState(0);
 
+    // Función para manejar la selección de una talla
     const handleSelect = (talla) => {
         setSelectedTalla(talla);
         console.log('Talla:', talla);
     };
 
+    // Leer los datos del zapato con hook de efecto
     useEffect(() => {
         readZapato();
         //console.log(infoZapato);
     }, []);
 
+    // Función para leer los datos del zapato
     const readZapato = async () => {
         try {
             // Crear y llenar el formData
@@ -101,6 +106,7 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    // Función para leer las tallas por color
     const readTallasPorColor = async (id_color) => {
         try {
             setSelectedTalla(0);
@@ -136,6 +142,7 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    // Función para leer el detalle del zapato
     const readDetalle = async () => {
         try {
             // Crear y llenar el formData
@@ -168,6 +175,7 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    // Función para leer la cantidad de un zapato
     const readCantidad = async (id_detalle_zapato) => {
         try {
             // Crear y llenar el formData
@@ -195,6 +203,7 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    // Función para crear un detalle de pedidoz
     const ceateDetallePedido = async () => {
         try {
             console.log('Talla final: ', selectedTalla, 'Color final: ', selectedColor, 'Cantidad final: ', cantidad);
@@ -254,6 +263,7 @@ const Zapatos = ({ route }) => {
         }
     };
 
+    // Retornar la vista de la pantalla de detalles de un zapato
     return (
         <ScrollView style={styles.contenedorTotal}>
             <StatusBar style="dark" backgroundColor="#1591CC" />
@@ -357,6 +367,7 @@ const Zapatos = ({ route }) => {
     );
 };
 
+// Estilos para la pantalla de detalles de un zapato
 const styles = StyleSheet.create({
     contenedorTotal: {
         marginTop: 30,
@@ -473,5 +484,5 @@ const styles = StyleSheet.create({
     },
 });
 
-
+// Exportar la pantalla de detalles de un zapato
 export default Zapatos;

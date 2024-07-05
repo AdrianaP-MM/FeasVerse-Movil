@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomTextInput from '../../components/inputs/CustomTextInput '; // Importamos nuestro componente CustomTextInput
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 
+// Componente funcional Code
 const Code = ({ route, navigation }) => {
     const [code, setCode] = useState(''); // Estado para almacenar el código ingresado por el usuario
     const { email, codigo, id } = route.params; // Obtenemos el email, código y id del parámetro route
@@ -121,5 +122,6 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportamos el componente Code
 export default Code;
 

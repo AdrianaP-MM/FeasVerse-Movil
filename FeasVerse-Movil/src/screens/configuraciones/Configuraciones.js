@@ -5,13 +5,17 @@ import { Config } from '../../utils/constantes';
 
 const { width } = Dimensions.get('window');
 
+// Componente funcional Configuraciones
 const Configuraciones = ({ navigation }) => {
+    // Estado para almacenar el nombre del usuario
     const [nombre, setNombre] = useState('');
 
+    // Cargar el nombre del usuario al montar el componente
     useEffect(() => {
         fetchUsuario();
     }, []);
 
+    // Función para obtener el nombre del usuario
     const fetchUsuario = () => {
         fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
@@ -28,6 +32,7 @@ const Configuraciones = ({ navigation }) => {
             });
     };
 
+    // Función para cerrar la sesión del usuario
     const handleLogOut = async () => {
         const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
         const fetchApi = await fetch(url);
@@ -40,6 +45,7 @@ const Configuraciones = ({ navigation }) => {
         }
     };
 
+    // Estructura de la pantalla
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -83,6 +89,7 @@ const Configuraciones = ({ navigation }) => {
     );
 };
 
+// Estilos de la pantalla Configuraciones
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -177,4 +184,5 @@ const styles = StyleSheet.create({
     },
 });
 
+// Exportar el componente Configuracioness
 export default Configuraciones;

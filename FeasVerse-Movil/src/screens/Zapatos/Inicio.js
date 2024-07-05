@@ -10,6 +10,7 @@ import { fillData } from '../../utils/fillData';
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
+// Pantalla de Inicio
 const Inicio = ({ navigation }) => {
     const [zapatos, setZapatos] = useState([]);
     const [marcas, setMarcas] = useState([]);
@@ -17,13 +18,13 @@ const Inicio = ({ navigation }) => {
     const [userName, setUserName] = useState('');
     const [cantdPedidos, setCantdPedidosPorMes] = useState('');
 
+    // Función para comprobar si hay un carrito existente
     const comprobarCarrito = async () => {
         const DATA0 = await fetchData('services/publica/carrito.php', 'readAllCarrito');
 
         if (DATA0.status) {
             console.log('Si hay carrito');
-        }
-        else {
+        } else {
             const FORM1 = new FormData();
             FORM1.append('estado_pedido', 4);
 
@@ -35,13 +36,15 @@ const Inicio = ({ navigation }) => {
                 sweetAlert(4, DATA.error, true);
             }
         }
-    }
+    };
 
+    // useEffect se ejecuta al montar el componente
     useEffect(() => {
-        readElements();
-        comprobarCarrito();
+        readElements(); // Leer elementos de la API
+        comprobarCarrito(); // Comprobar si hay un carrito
     }, []);
 
+    // Función para leer datos de la API
     const readElements = async () => {
         try {
             const responses = await Promise.all([
@@ -90,20 +93,21 @@ const Inicio = ({ navigation }) => {
         }
     };
 
-    // Función para cambiar de pantalla
+    // Función para cambiar de pantalla al detalle del zapato más vendido
     function handleViewDetalleMas() {
         if (masVendido.id_zapato != null || masVendido.id_zapato != 0) {
             navigation.navigate('Detalle', { id_zapato: masVendido.id_zapato });
         }
     };
 
+    // Función para cambiar de pantalla al detalle de un zapato específico
     function handleViewDetalle(id_zapato) {
         if (id_zapato != null || id_zapato != 0) {
             navigation.navigate('Detalle', { id_zapato: id_zapato });
             console.log(id_zapato);
         }
     }
-    
+
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
     const fila1Height = screenHeight * 0.60;

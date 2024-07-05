@@ -1,3 +1,4 @@
+// Const de Colores
 export const Colors = {
     TituloL: '#1591CC',
     TituloInicio: '1E293B',
@@ -5,6 +6,7 @@ export const Colors = {
     pass: '828282'
 };
 
+// Const de Tamaños de Fuentes
 export const FontSizes = {
     small: 12,
     medium: 16,

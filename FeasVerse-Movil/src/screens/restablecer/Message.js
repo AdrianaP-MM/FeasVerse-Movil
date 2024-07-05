@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+// Componente funcional Message
 const Message = ({ navigation }) => {
     // Función para manejar el retorno al inicio de sesión
     const handleReturnToLogin = () => {
