@@ -1,12 +1,28 @@
 # FeasVerse-Movil
 
-## BUENAS PRÁCTICAS:
-Archivos con PascalCase, ejemplo: NombreArchivo
-
 ## Dependencias utilizadas hasta el momento:
 
-* npm i react-native-floating-label-text-input
-*  npm i @react-navigation/native
+@expo/vector-icons": "^14.0.2",
+    "@react-native-community/datetimepicker": "^8.1.1",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-picker/picker": "github:react-native-picker/picker",
+    "@react-navigation/bottom-tabs": "^6.5.20",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.3.29",
+    "expo": "~51.0.9",
+    "expo-font": "~12.0.7",
+    "expo-status-bar": "~1.12.1",
+    "lottie-ios": "^4.4.3",
+    "lottie-react-native": "^6.7.2",
+    "react": "18.2.0",
+    "react-native": "0.74.1",
+    "react-native-floating-label-input": "^1.4.3",
+    "react-native-floating-label-text-input": "^0.1.5",
+    "react-native-gesture-handler": "^2.16.2",
+    "react-native-reanimated": "^3.12.0",
+    "react-native-safe-area-context": "^4.10.5",
+    "react-native-screens": "^3.32.0",
+    "react-native-ui-datepicker"
 
 #  FEASVERSE
 
