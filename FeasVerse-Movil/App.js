@@ -16,6 +16,8 @@ import DetalleZapato from './src/screens/Zapatos/DetallesZapato';
 import Perfil from './src/screens/configuraciones/Perfil';
 import Navigator from './src/Navigator/TabNavigator';
 import Configuraciones from './src/screens/configuraciones/Configuraciones';
+import MostrarDetalles from './src/screens/configuraciones/MostrarDetalles';
+import Pedidos from './src/screens/configuraciones/Pedidos';
 import { Config } from './src/utils/constantes';
 
 const Stack = createStackNavigator();
@@ -118,6 +120,8 @@ const App = () => {
                 <Stack.Screen name="Message" component={Message} />
                 <Stack.Screen name="Configuraciones" component={Configuraciones} />
                 <Stack.Screen name="Detalle" component={DetalleZapato} />
+                <Stack.Screen name="MostrarDetalles" component={MostrarDetalles} />
+                <Stack.Screen name="Pedidos" component={Pedidos} />
             </Stack.Navigator>
         </NavigationContainer>
     );

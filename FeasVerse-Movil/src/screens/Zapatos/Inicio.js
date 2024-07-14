@@ -7,6 +7,7 @@ import CardZapato from '../../components/zapatos/cardZapato';
 import { StatusBar } from 'expo-status-bar';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import { fillData } from '../../utils/fillData';
+import { useFocusEffect } from '@react-navigation/native';
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
@@ -38,11 +39,14 @@ const Inicio = ({ navigation }) => {
         }
     };
 
-    // useEffect se ejecuta al montar el componente
-    useEffect(() => {
-        readElements(); // Leer elementos de la API
-        comprobarCarrito(); // Comprobar si hay un carrito
-    }, []);
+
+    // Efecto para cargar los datos del carrito
+    useFocusEffect(
+        React.useCallback(() => {
+            readElements(); // Leer elementos de la API
+            comprobarCarrito(); // Comprobar si hay un carrito
+        }, [])
+    );
 
     // Función para leer datos de la API
     const readElements = async () => {

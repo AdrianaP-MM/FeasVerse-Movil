@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dim
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import TextInputC from '../../components/inputs/Border_Down';
+import { useFocusEffect } from '@react-navigation/native';
 
 // para conseguir el width de la pantalla
 const { width } = Dimensions.get('window');
@@ -29,10 +30,12 @@ const Perfil = ({ navigation }) => {
     const [modalDireccion, setModalDireccion] = useState('');
     const [modalID, setModalID] = useState('');
 
-    // Función para cargar los datos del usuario
-    useEffect(() => {
-        fetchUsuario();
-    }, []);
+    // Efecto para cargar los datos del carrito
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUsuario();
+        }, [])
+    );
 
     // Función para obtener los datos del usuario
     const fetchUsuario = () => {

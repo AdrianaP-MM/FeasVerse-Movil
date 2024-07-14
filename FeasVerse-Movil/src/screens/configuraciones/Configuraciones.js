@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Config } from '../../utils/constantes';
+import { FontAwesome } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -10,11 +12,13 @@ const Configuraciones = ({ navigation }) => {
     // Estado para almacenar el nombre del usuario
     const [nombre, setNombre] = useState('');
 
-    // Cargar el nombre del usuario al montar el componente
-    useEffect(() => {
-        fetchUsuario();
-    }, []);
-
+    // Efecto para cargar los datos del carrito
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUsuario();
+        }, [])
+    );
+    
     // Función para obtener el nombre del usuario
     const fetchUsuario = () => {
         fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
@@ -67,6 +71,15 @@ const Configuraciones = ({ navigation }) => {
                         <Text style={styles.title}>Tu perfil</Text>
                         <Text style={styles.description}>
                             Apartado para visualizar tu información y modificarla en caso un dato esté incorrecto o si requiere actualización.
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pedidos')}>
+                    <FontAwesome name="truck" size={50} color="#007BFF" style={styles.iconPlaceholder} />
+                    <View style={styles.cardTextContainer}>
+                        <Text style={styles.title}>Tus pedidos</Text>
+                        <Text style={styles.description}>
+                            Apartado para visualizar tus pedidos, donde podas visualizar tus pedidos pendientes, en camino y entregados.
                         </Text>
                     </View>
                 </TouchableOpacity>

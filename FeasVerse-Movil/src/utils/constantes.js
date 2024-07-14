@@ -22,7 +22,7 @@ export const FontSizes = {
 export const Config = {
     IP: 'http://192.168.1.18', //EMILIANO
     //IP: 'http://192.168.58.105',   //FERNANDO
-    //export const IP = 'http://';  //ADRIANA
+    //IP = 'http://192.168.145.120';  //ADRIANA
 };
 
 

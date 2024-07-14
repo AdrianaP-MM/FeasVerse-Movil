@@ -65,13 +65,15 @@ const Carrito = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             fetchUsuario();
-            fetchCartData();
+            fetchCartData();  // Esta línea ya está presente
         }, [])
     );
 
-    // Función para obtener los datos del carrito
+
+
     const fetchCartData = async () => {
         try {
+            console.log("Fetching cart data...");  // Agrega este log
             const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=readAll`);
             const text = await response.text();
             try {
@@ -94,6 +96,7 @@ const Carrito = ({ navigation }) => {
             console.error('Fetch error:', error);
         }
     };
+
 
     // Función para calcular el total de la compra
     const calculateTotal = (products) => {
@@ -130,9 +133,10 @@ const Carrito = ({ navigation }) => {
         }
     };
 
-    // Función para actualizar la cantidad de un producto en el carrito
-    const handleUpdateQuantity = async (id, quantity) => {
 
+
+    // Función para actualizar la cantidad de un producto en el carrito
+    const handleUpdateQuantity = async (id, id_detalle_zapato, quantity) => {
         if (!quantity || isNaN(quantity) || quantity <= 0) {
             showModal('Por favor, introduce una cantidad válida.');
             return;
@@ -141,7 +145,8 @@ const Carrito = ({ navigation }) => {
         try {
             // Verificar stock
             const formData = new FormData();
-            formData.append('id_detalle_zapato', id);
+            formData.append('id_detalle_zapato', id_detalle_zapato);
+            console.log(id);
             const response = await fetch(`${Config.IP}/FeasVerse/api/${ZAPATOS_API}?action=validationCantidad`, {
                 method: 'POST',
                 body: formData
@@ -149,7 +154,7 @@ const Carrito = ({ navigation }) => {
 
             const text = await response.text();
             const result = JSON.parse(text);
-
+            console.log(result);
             if (result.status) {
                 const { cantidad_zapato } = result.dataset;
                 if (quantity > cantidad_zapato) {
@@ -172,10 +177,11 @@ const Carrito = ({ navigation }) => {
 
             const updateText = await updateResponse.text();
             const updateResult = JSON.parse(updateText);
-
+            console.log(updateResult);
             if (updateResult.status) {
-                fetchCartData();
-                closeEditModal();
+                showModal('Se ha actualizado correctamente');
+                await fetchCartData();
+                closeEditModal(); // Llama a la función closeEditModal aquí para limpiar el campo de cantidad
             } else {
                 showModal(updateResult.message);
             }
@@ -185,6 +191,7 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+
     // Función para realizar la compra
     const handleBuy = async () => {
         try {
@@ -192,37 +199,37 @@ const Carrito = ({ navigation }) => {
                 showModal('No hay productos en el carrito');
                 return;
             }
-    
+
             const DATA0 = await fetchData(CARRITO_API, 'leerPrecios');
             if (DATA0.status) {
                 const ROW0 = DATA0.dataset;
                 const idPrecio = ROW0.id_costo_de_envio_por_departamento;
-    
+
                 const repartidorData = await fetchData(CARRITO_API, 'leerRepartidor');
                 if (repartidorData.status) {
                     const repartidorRow = repartidorData.dataset;
                     const idRepartidor = repartidorRow.id_trabajador;
-    
+
                     const today = new Date();
                     const year = today.getFullYear();
                     const month = String(today.getMonth() + 1).padStart(2, '0');
                     const day = String(today.getDate()).padStart(2, '0');
                     const formattedDate = `${year}-${month}-${day}`;
-    
+
                     const formData = new FormData();
                     formData.append('fecha_de_inicio', formattedDate);
                     formData.append('id_costo_de_envio_por_departamento', idPrecio);
                     formData.append('estado_pedido', 1);
-    
+
                     const carritoData = await fetchData(CARRITO_API, 'readAll');
                     if (carritoData.status) {
                         const carritoRow = carritoData.dataset[0];
                         const idPedidoCliente = carritoRow.id_pedido_cliente;
-    
+
                         formData.append('id_pedido_cliente', idPedidoCliente);
                         formData.append('id_repartidor', idRepartidor);
                         formData.append('precio_total', total);
-    
+
                         const updateData = await fetchData(CARRITO_API, 'update', formData);
                         if (updateData.status) {
                             Alert.alert('Compra realizada con éxito');
@@ -254,7 +261,7 @@ const Carrito = ({ navigation }) => {
             console.error('Fetch error:', error);
         }
     };
-    
+
     // Función para mostrar un mensaje modal
     const showModal = (message) => {
         setModalMessage(message);
@@ -266,18 +273,19 @@ const Carrito = ({ navigation }) => {
         setModalVisible(false);
     };
 
+    // Función para cerrar el modal de editar
+    const closeEditModal = () => {
+        setEditModalVisible(false);
+        setSelectedProduct(null);
+        setQuantity(''); // Limpia el campo de cantidad
+    };
+
     // Función para abrir el modal de editar
     const openEditModal = (product) => {
         setSelectedProduct(product);
         setQuantity(product.cantidad_pedido.toString());
         setEditModalVisible(true);
     };
-
-    // Función para cerrar el modal de editar
-    const closeEditModal = () => {
-        setEditModalVisible(false);
-    };
-
     // Función para abrir el modal de eliminar
     const openDeleteModal = (product) => {
         setSelectedProduct(product);
@@ -379,7 +387,7 @@ const Carrito = ({ navigation }) => {
                                 <View style={styles.buttonRow}>
                                     <Pressable
                                         style={[styles.button, styles.buttonClose]}
-                                        onPress={() => handleUpdateQuantity(selectedProduct.id_detalles_pedido, quantity)}
+                                        onPress={() => handleUpdateQuantity(selectedProduct.id_detalles_pedido, selectedProduct.id_detalle_zapato, quantity)}
                                     >
                                         <Text style={styles.textStyle}>Actualizar</Text>
                                     </Pressable>
