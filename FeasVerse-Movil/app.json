@@ -18,13 +18,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/img/zapato.png",
         "backgroundColor": "#1591CC"
-      }
+      },
+      "package": "com.emu08.FeasVerseMovil"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "48faef26-226d-419d-9967-b4a18ed7189b"
+      }
+    }
   }
 }

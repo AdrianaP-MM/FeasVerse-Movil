@@ -188,15 +188,14 @@ const Inicio = ({ navigation }) => {
                         </View>
                         <ScrollView horizontal={true} style={styles.scrollHorizontal}>
                             {zapatos.map(zapato => (
-                                <TouchableOpacity onPress={() => handleViewDetalle(zapato.id_zapato)}>
+                                <TouchableOpacity key={zapato.id_zapato} onPress={() => handleViewDetalle(zapato.id_zapato)}>
                                     <CardZapato
-                                        key={zapato.id_zapato}
                                         zapatoData={{
                                             nombre: zapato.nombre_zapato,
                                             genero: zapato.genero_zapato,
-                                            estrellas: zapato.estrellas,
-                                            precio: zapato.precio_unitario_zapato,
-                                            foto: zapato.foto_detalle_zapato
+                                            estrellas: zapato.estrellas_zapato,
+                                            foto: zapato.foto_detalle_zapato,
+                                            precio: zapato.precio_zapato
                                         }}
                                     />
                                 </TouchableOpacity>
@@ -208,6 +207,7 @@ const Inicio = ({ navigation }) => {
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     containerTotal: {

@@ -16,15 +16,15 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
     return (
         <Tab.Navigator
-            initialRouteName="Inicio"
+            initialRouteName="HomeTab"
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color }) => {
                     let iconName;
-                    let iconSize = focused ? 50 : 35; // Cambia el tamaño del ícono basado en el estado de enfoque
+                    let iconSize = focused ? 50 : 35;
 
                     if (route.name === 'Zapatos') {
                         iconName = 'shoe-formal';
-                    } else if (route.name === 'Inicio') {
+                    } else if (route.name === 'HomeTab') {
                         iconName = 'home';
                     } else if (route.name === 'Configuraciones') {
                         iconName = 'cog';
@@ -43,7 +43,7 @@ const TabNavigator = () => {
             })}
         >
             <Tab.Screen name="Zapatos" component={Zapatos} options={{ headerShown: false }} />
-            <Tab.Screen name="Inicio" component={Inicio} options={{ headerShown: false }} />
+            <Tab.Screen name="HomeTab" component={Inicio} options={{ headerShown: false }} />
             <Tab.Screen name="Configuraciones" component={Configuraciones} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
