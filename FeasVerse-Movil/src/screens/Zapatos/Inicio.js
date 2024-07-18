@@ -195,7 +195,7 @@ const Inicio = ({ navigation }) => {
                                             genero: zapato.genero_zapato,
                                             estrellas: zapato.estrellas_zapato,
                                             foto: zapato.foto_detalle_zapato,
-                                            precio: zapato.precio_zapato
+                                            precio: zapato.precio_unitario_zapato
                                         }}
                                     />
                                 </TouchableOpacity>

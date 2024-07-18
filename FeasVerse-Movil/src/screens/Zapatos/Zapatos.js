@@ -11,7 +11,7 @@ import { fillData } from '../../utils/fillData';
 
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
-const Zapatos = ({navigation}) => {
+const Zapatos = ({ navigation }) => {
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
     const screenHeight2 = screenHeight * 1.5;
@@ -19,8 +19,10 @@ const Zapatos = ({navigation}) => {
     const [selectedValue, setSelectedValue] = useState('');
     const [isBrandSelected, setIsBrandSelected] = useState(false);
     const slideAnim = useRef(new Animated.Value(-150)).current;
+    const [idMarcaSelected, setIdMarca] = useState('');
 
-    const handleBrandClick = () => {
+    function handleBrandClick(id_marca) {
+        readMarca(id_marca);
         setIsBrandSelected(true);
         Animated.timing(slideAnim, {
             toValue: 0,
@@ -35,6 +37,8 @@ const Zapatos = ({navigation}) => {
             duration: 300,
             useNativeDriver: true,
         }).start(() => setIsBrandSelected(false));
+        setIdMarca(0);
+        readElements();
     };
 
     function handleViewDetalle(id_zapato) {
@@ -46,104 +50,195 @@ const Zapatos = ({navigation}) => {
 
     const [zapatos, setZapatos] = useState([]);
     const [marcas, setMarcas] = useState([]);
-    const [masVendido, setMasVendido] = useState('');
-    const [userName, setUserName] = useState('');
-    const [cantdPedidos, setCantdPedidosPorMes] = useState('');
+    const [marcaSelected, setMarcaSelected] = useState('');
 
     useEffect(() => {
         readElements();
     }, []);
 
-    const readElements = async () => {
+    const readElements = async (searchResponse = null) => {
         try {
-            const responses = await Promise.all([
-                fillData({ php: 'zapatos', accion: 'readResumeAllZapatos' }),
-                fillData({ php: 'marcas', accion: 'readAll' }),
-            ]);
+            let responseShoe, responseMarcas;
 
-            const [ responseShoe, responseMarcas] = responses;
-
-            if (Array.isArray(responseShoe) && responseShoe.length > 0) {
-                setZapatos(responseShoe);
+            if (searchResponse) {
+                responseShoe = searchResponse;
             } else {
-                //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+                const responses = await Promise.all([
+                    fillData({ php: 'zapatos', accion: 'readResumeAllZapatos' }),
+                    fillData({ php: 'marcas', accion: 'readAll' }),
+                ]);
+
+                [responseShoe, responseMarcas] = responses;
+
+                if (Array.isArray(responseMarcas) && responseMarcas.length > 0) {
+                    setMarcas(responseMarcas);
+                } else {
+                    Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
+                }
             }
 
-            if (Array.isArray(responseMarcas) && responseMarcas.length > 0) {
-                setMarcas(responseMarcas);
+            if (responseShoe) {
+                setZapatos(responseShoe);
             } else {
-                //Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
+                Alert.alert('No hay Zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
             }
 
         } catch (error) {
             console.error('Error en leer los elementos:', error);
+            //Alert.alert('Error', 'Hubo un error al obtener los datos.');
+            readElements();
+        }
+    };
+
+    const readMarca = async (id_marca) => {
+        try {
+            // Crear y llenar el formData
+            const formData = new FormData();
+            formData.append('idMarca', id_marca);
+            console.log('id marca: ', id_marca);
+            setIdMarca(id_marca);
+
+            // Realizar las solicitudes de manera concurrente
+            const [responseMarca, responseZapatos] = await Promise.all([
+                fillData({
+                    php: 'marcas',
+                    accion: 'readOne',
+                    method: 'POST',
+                    formData: formData
+                }),
+                fillData({
+                    php: 'zapatos',
+                    accion: 'readResumeAllZapatosMarca',
+                    method: 'POST',
+                    formData: formData
+                }),
+            ]);
+
+            if (responseMarca) {
+                setMarcaSelected(responseMarca);
+                console.log(responseMarca);
+            } else {
+                //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+            }
+
+            if (responseZapatos) {
+                readElements(responseZapatos);
+                console.log(responseZapatos);
+            } else {
+                //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+            }
+        } catch (error) {
+            console.error('Error en leer la marca seleccionada:', error);
             Alert.alert('Error', 'Hubo un error.');
         }
     };
 
+    const searchZapatos = async (searchValue) => {
+        let responseShoe;
+        if (searchValue) {
+            try {
+                // Crear y llenar el formData
+                const formData = new FormData();
+                formData.append('search', searchValue);
+                console.log(searchValue);
+
+                if (idMarcaSelected == 0) {
+                    responseShoe = await
+                        fillData({
+                            php: 'zapatos',
+                            accion: 'searchValue',
+                            method: 'POST',
+                            formData: formData
+                        });
+                }
+                else {
+                    responseShoe = await
+                        fillData({
+                            php: 'zapatos',
+                            accion: 'searchValueZapatoMarca',
+                            method: 'POST',
+                            formData: formData
+                        });
+                }
+                if (responseShoe) {
+                    readElements(responseShoe);
+                    console.log(responseShoe);
+                } else {
+                    //Alert.alert('No hay zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+                }
+            } catch (error) {
+                console.error('Error en leer el zapato buscado:', error);
+                Alert.alert('Error', 'Hubo un error.');
+            }
+        } else {
+            if (idMarcaSelected == 0) {
+                readElements();
+                console.log('No marca seleccionada')
+            }
+            else {
+                readMarca(idMarcaSelected);
+                console.log('Marca seleccionada', idMarcaSelected)
+            }
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={[styles.containerTotal,
-        { maxHeight: isBrandSelected ? null : screenHeight }]}>
+        { maxHeight: isBrandSelected ? null : null }]}>
             <StatusBar style="dark" backgroundColor="#1591CC" />
             <Animated.View style={[styles.animatedContainer, { marginTop: isBrandSelected ? 0 : -40 }]}>
                 {isBrandSelected && (
                     <TouchableOpacity onPress={handleCloseClick} style={styles.contenedor}>
                         <View style={styles.colImage}>
                             <Image
-                                source={require('../../img/marcas/marca.png')}
+                                source={marcaSelected.foto_marca ?
+                                    { uri: `${Config.IP}/FeasVerse/api/helpers/images/marcas/${marcaSelected.foto_marca}` }
+                                    : require('../../img/defaultImage.png')}
                                 style={styles.marcaImg}
                             />
                         </View>
                         <View style={styles.colText}>
-                            <Text texto='Zapatos de tacón alto de alta calidad y atractivos. Nos especializamos en tallas grandes, llegando hasta la talla italiana 46. Diseñados para mujeres altas, hombres que disfrutan de usar tacones y cualquier persona que ame lucir zapatos de tacón alto. Nuestra colección ofrece elegancia y comodidad, con atención especial a los detalles.'
+                            <Text texto={`${marcaSelected.descripcion_marca}`}
                                 font='TTWeb-Regular' textAlign='center' />
                         </View>
                         <View style={styles.containerText}>
-                            <Text texto='Adidas' font='TTWeb-Bold' textAlign='center' fontSize={35} color='white' />
+                            <Text texto={`${marcaSelected.nombre_marca}`} font='TTWeb-Bold' textAlign='center' fontSize={35} color='white' />
                         </View>
                     </TouchableOpacity>
                 )}
             </Animated.View>
             <View style={styles.row}>
-                <View style={[styles.containerFiltros, { top: isBrandSelected ? '2%' : '5%' }]}>
+                <View style={[styles.containerFiltros, { top: isBrandSelected ? '0.5%' : '1%' }]}>
                     <Input
                         placeholder='Búsqueda...'
                         width='80%'
-                        iconImage={(require('../../img/icons/iconLupa.png'))} // Icono de lupa
+                        iconImage={require('../../img/icons/iconLupa.png')}
+                        onChangeText={searchZapatos}
                     />
+
                     <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={selectedValue}
-                            style={styles.picker}
-                            itemStyle={styles.pickerItem}
-                            onValueChange={(itemValue) => setSelectedValue(itemValue)}
-                        >
-                            <Picker.Item label="Tallas" value="0" />
-                            <Picker.Item label="Pequeña" value="small" />
-                            <Picker.Item label="Mediana" value="medium" />
-                            <Picker.Item label="Grande" value="large" />
-                        </Picker>
+                        
                     </View>
                 </View>
                 <View style={styles.colMarcas}>
                     <Text texto='¿Te interesa alguna marca en especifico?' font='TTWeb-SemiBold' color='white' textAlign='center' />
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    {marcas.map(marca => (
-                                <CardMarca key={marca.id_marca}
-                                    marcaData={{
-                                        foto: marca.foto_marca
-                                    }}
-                                    accionCard={handleBrandClick} />
-                            ))}
+                        {marcas.map(marca => (
+                            <CardMarca key={marca.id_marca}
+                                marcaData={{
+                                    foto: marca.foto_marca
+                                }}
+                                accionCard={() => handleBrandClick(marca.id_marca)}
+                            />
+                        ))}
                     </ScrollView>
                 </View>
                 <View style={styles.colZapatos}>
                     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    {zapatos.map(zapato => (
-                                <TouchableOpacity onPress={() => handleViewDetalle(zapato.id_zapato)}>
+                        {zapatos.length > 0 ? (
+                            zapatos.map(zapato => (
+                                <TouchableOpacity key={zapato.id_zapato} onPress={() => handleViewDetalle(zapato.id_zapato)}>
                                     <CardZapato
-                                        key={zapato.id_zapato}
                                         zapatoData={{
                                             nombre: zapato.nombre_zapato,
                                             genero: zapato.genero_zapato,
@@ -153,11 +248,14 @@ const Zapatos = ({navigation}) => {
                                         }}
                                     />
                                 </TouchableOpacity>
-                            ))}
+                            ))
+                        ) : (
+                            <Text texto='No se encontraron coincidencias' font='TTWeb-SemiBold' textAlign='center' />
+                        )}
                     </ScrollView>
                 </View>
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 };
 
@@ -177,7 +275,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'pink',
     },
     scrollViewContent: {
-        justifyContent: 'space-around',
+        justifyContent: 'start',
         flexGrow: 1,
         alignItems: 'center',
         paddingVertical: 15,
@@ -187,6 +285,7 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         backgroundColor: '#1591CC',
         paddingTop: 200,
+        paddingHorizontal: 0,
     },
     colZapatos: {
         width: '70%',
