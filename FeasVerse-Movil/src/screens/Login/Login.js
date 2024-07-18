@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Image, Text, Alert, TouchableOpacity } from 'react-native';
-import TextInputC from '../../components/inputs/Border_Down';
+import { StyleSheet, View, Button, Image, Text, Alert, TouchableOpacity, TextInput } from 'react-native';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 
@@ -95,7 +94,7 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
             <Text style={styles.textTitle}>
                 Inicio de sesión
             </Text>
-            <TextInputC
+            <TextInput
                 label="Correo electrónico"
                 valor={correo}
                 setValor={setCorreo}
@@ -103,7 +102,7 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
                 placeholder="Introduce tu correo"
                 autoCapitalize="none"
             />
-            <TextInputC
+            <TextInput
                 valor={clave}
                 setValor={setClave}
                 label="Contraseña"

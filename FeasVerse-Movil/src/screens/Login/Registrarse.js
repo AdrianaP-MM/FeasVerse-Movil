@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Text, Alert, TouchableOpacity } from 'react-native';
-import TextInputC from '../../components/inputs/Border_Down';
+import { StyleSheet, View, Button, Text, Alert, TouchableOpacity, TextInput } from 'react-native';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -104,7 +103,7 @@ const Registrarse = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.textTitle}>Registrarse</Text>
-            <TextInputC
+            <TextInput
                 label="Nombre"
                 valor={nombre}
                 setValor={setNombre}
@@ -112,7 +111,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu nombre"
                 autoCapitalize="words"
             />
-            <TextInputC
+            <TextInput
                 label="Apellido"
                 valor={apellido}
                 setValor={setApellido}
@@ -120,7 +119,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu apellido"
                 autoCapitalize="words"
             />
-            <TextInputC
+            <TextInput
                 label="Correo electrónico"
                 valor={correo}
                 setValor={setCorreo}
@@ -128,7 +127,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu correo"
                 autoCapitalize="none"
             />
-            <TextInputC
+            <TextInput
                 label="DUI"
                 valor={dui}
                 maxLength={10}
@@ -137,7 +136,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu DUI"
                 autoCapitalize="none"
             />
-            <TextInputC
+            <TextInput
                 label="Teléfono"
                 valor={telefono}
                 maxLength={9}
@@ -161,7 +160,7 @@ const Registrarse = ({ navigation }) => {
             <View style={styles.containerFecha}>
                 <Text style={styles.text}>Fecha de registro: {registro.toLocaleDateString()}</Text>
             </View>
-            <TextInputC
+            <TextInput
                 label="Dirección"
                 valor={direccion}
                 setValor={setDireccion}
@@ -169,7 +168,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu dirección"
                 autoCapitalize="sentences"
             />
-            <TextInputC
+            <TextInput
                 label="Contraseña"
                 valor={clave}
                 setValor={setClave}
@@ -177,7 +176,7 @@ const Registrarse = ({ navigation }) => {
                 placeholder="Introduce tu contraseña"
                 secureTextEntry={true}
             />
-            <TextInputC
+            <TextInput
                 label="Confirma tu contraseña"
                 valor={claveconfirmada}
                 setValor={setConfirmarClave}

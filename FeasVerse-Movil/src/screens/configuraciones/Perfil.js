@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, ActivityIndicator, Alert, Button, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
-import TextInputC from '../../components/inputs/Border_Down';
 import { useFocusEffect } from '@react-navigation/native';
 
 // para conseguir el width de la pantalla
@@ -147,7 +146,7 @@ const Perfil = ({ navigation }) => {
             <View style={styles.labelBackground} />
             <View style={styles.headerLine} />
             <View style={styles.inputs}>
-                <TextInputC
+                <TextInput
                     label="Nombre"
                     valor={nombre}
                     setValor={setNombre}
@@ -156,7 +155,7 @@ const Perfil = ({ navigation }) => {
                     autoCapitalize="words"
                     editable={false}
                 />
-                <TextInputC
+                <TextInput
                     label="Apellido"
                     valor={apellido}
                     setValor={setApellido}
@@ -165,7 +164,7 @@ const Perfil = ({ navigation }) => {
                     autoCapitalize="words"
                     editable={false}
                 />
-                <TextInputC
+                <TextInput
                     label="Correo electrónico"
                     valor={correo}
                     setValor={setCorreo}
@@ -174,7 +173,7 @@ const Perfil = ({ navigation }) => {
                     autoCapitalize="none"
                     editable={false}
                 />
-                <TextInputC
+                <TextInput
                     label="DUI"
                     valor={dui}
                     maxLength={10}
@@ -184,7 +183,7 @@ const Perfil = ({ navigation }) => {
                     autoCapitalize="none"
                     editable={false}
                 />
-                <TextInputC
+                <TextInput
                     label="Teléfono"
                     valor={telefono}
                     maxLength={9}
@@ -197,7 +196,7 @@ const Perfil = ({ navigation }) => {
                 <View style={styles.containerFecha}>
                     <Text style={styles.text}>Fecha de nacimiento: {nacimiento.toLocaleDateString()}</Text>
                 </View>
-                <TextInputC
+                <TextInput
                     label="Dirección"
                     valor={direccion}
                     setValor={setDireccion}
