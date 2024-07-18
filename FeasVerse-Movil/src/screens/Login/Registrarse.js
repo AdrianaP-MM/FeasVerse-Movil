@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Button, Text, Alert, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Button, Text, Alert, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import * as Font from 'expo-font';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import CustomTextInput from '../../components/inputs/CustomTextInput ';
+import CustomTextInputPassword from '../../components/inputs/CustomTextInputPassword';
+
 
 // Componente funcional Registrarse
 const Registrarse = ({ navigation }) => {
@@ -101,46 +104,46 @@ const Registrarse = ({ navigation }) => {
 
     // Estructura de la pantalla
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.textTitle}>Registrarse</Text>
-            <TextInput
+            <CustomTextInput
                 label="Nombre"
                 valor={nombre}
-                setValor={setNombre}
+                onChangeText={setNombre}
                 keyboardType="default"
                 placeholder="Introduce tu nombre"
                 autoCapitalize="words"
             />
-            <TextInput
+            <CustomTextInput
                 label="Apellido"
                 valor={apellido}
-                setValor={setApellido}
+                onChangeText={setApellido}
                 keyboardType="default"
                 placeholder="Introduce tu apellido"
                 autoCapitalize="words"
             />
-            <TextInput
+            <CustomTextInput
                 label="Correo electrónico"
                 valor={correo}
-                setValor={setCorreo}
+                onChangeText={setCorreo}
                 keyboardType="email-address"
                 placeholder="Introduce tu correo"
                 autoCapitalize="none"
             />
-            <TextInput
+            <CustomTextInput
                 label="DUI"
                 valor={dui}
                 maxLength={10}
-                setValor={setDUI}
+                onChangeText={setDUI}
                 keyboardType="default"
                 placeholder="Introduce tu DUI"
                 autoCapitalize="none"
             />
-            <TextInput
+            <CustomTextInput
                 label="Teléfono"
                 valor={telefono}
                 maxLength={9}
-                setValor={setTelefono}
+                onChangeText={setTelefono}
                 keyboardType="numeric"
                 placeholder="Introduce tu número de teléfono"
                 autoCapitalize="none"
@@ -160,26 +163,26 @@ const Registrarse = ({ navigation }) => {
             <View style={styles.containerFecha}>
                 <Text style={styles.text}>Fecha de registro: {registro.toLocaleDateString()}</Text>
             </View>
-            <TextInput
+            <CustomTextInput
                 label="Dirección"
                 valor={direccion}
-                setValor={setDireccion}
+                onChangeText={setDireccion}
                 keyboardType="default"
                 placeholder="Introduce tu dirección"
                 autoCapitalize="sentences"
             />
-            <TextInput
+            <CustomTextInputPassword
                 label="Contraseña"
                 valor={clave}
-                setValor={setClave}
+                onChangeText={setClave}
                 keyboardType="default"
                 placeholder="Introduce tu contraseña"
                 secureTextEntry={true}
             />
-            <TextInput
+            <CustomTextInputPassword
                 label="Confirma tu contraseña"
                 valor={claveconfirmada}
-                setValor={setConfirmarClave}
+                onChangeText={setConfirmarClave}
                 keyboardType="default"
                 placeholder="Confirma tu contraseña"
                 secureTextEntry={true}
@@ -195,7 +198,7 @@ const Registrarse = ({ navigation }) => {
                     <Text style={styles.link}>Regresar a inicio de sesión</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -204,8 +207,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
+        //alignItems: 'center',
+        //justifyContent: 'center',
     },
     containerFecha: {
         justifyContent: 'center',

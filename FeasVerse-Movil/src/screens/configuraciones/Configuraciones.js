@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Config } from '../../utils/constantes';
 import { FontAwesome } from '@expo/vector-icons';
@@ -64,7 +64,7 @@ const Configuraciones = ({ navigation }) => {
             <View style={styles.labelBackground} />
             <View style={styles.headerLine} />
 
-            <View style={styles.scrollView}>
+            <ScrollView style={styles.scrollView}>
                 <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Perfil')}>
                     <Ionicons name="person-circle" size={50} color="#007BFF" style={styles.iconPlaceholder} />
                     <View style={styles.cardTextContainer}>
@@ -97,7 +97,7 @@ const Configuraciones = ({ navigation }) => {
                 <TouchableOpacity style={styles.button} onPress={handleLogOut}>
                     <Text style={styles.buttonText}>Cerrar sesión</Text>
                 </TouchableOpacity>
-            </View>
+            </ScrollView>
         </View>
     );
 };
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 100,
     },
     buttonText: {
         color: '#fff',

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Button, Image, Text, Alert, TouchableOpacity, TextInput } from 'react-native';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
+import CustomTextInput from '../../components/inputs/CustomTextInput ';
+import CustomTextInputPassword from '../../components/inputs/CustomTextInputPassword';
+
 import * as Font from 'expo-font';
 
 // Importar el componente de inicio de sesión
@@ -54,13 +57,14 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
         const formData = new FormData();
         formData.append('correo', correo);
         formData.append('clave', clave);
-
+        console.log(datos);
         // Realizar la petición HTTP
         const fetchApi = await fetch(url, {
             method: 'POST',
             body: formData
         });
         const datos = await fetchApi.json();
+        console.log(datos);
         if (datos.status) {
             Alert.alert('Has iniciado correctamente sesión');
             handelViewInicio();
@@ -94,17 +98,16 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
             <Text style={styles.textTitle}>
                 Inicio de sesión
             </Text>
-            <TextInput
+            <CustomTextInput
                 label="Correo electrónico"
                 valor={correo}
-                setValor={setCorreo}
+                onChangeText={setCorreo}
                 keyboardType="email-address"
                 placeholder="Introduce tu correo"
-                autoCapitalize="none"
             />
-            <TextInput
+            <CustomTextInputPassword
                 valor={clave}
-                setValor={setClave}
+                onChangeText={setClave}
                 label="Contraseña"
                 placeholder="Introduce tu contraseña"
                 secureTextEntry={true}

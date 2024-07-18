@@ -149,7 +149,7 @@ const Perfil = ({ navigation }) => {
                 <TextInput
                     label="Nombre"
                     valor={nombre}
-                    setValor={setNombre}
+                    onChangeText={setNombre}
                     keyboardType="default"
                     placeholder="Introduce tu nombre"
                     autoCapitalize="words"
@@ -158,7 +158,7 @@ const Perfil = ({ navigation }) => {
                 <TextInput
                     label="Apellido"
                     valor={apellido}
-                    setValor={setApellido}
+                    onChangeText={setApellido}
                     keyboardType="default"
                     placeholder="Introduce tu apellido"
                     autoCapitalize="words"
@@ -167,7 +167,7 @@ const Perfil = ({ navigation }) => {
                 <TextInput
                     label="Correo electrónico"
                     valor={correo}
-                    setValor={setCorreo}
+                    onChangeText={setCorreo}
                     keyboardType="email-address"
                     placeholder="Introduce tu correo"
                     autoCapitalize="none"
@@ -177,7 +177,7 @@ const Perfil = ({ navigation }) => {
                     label="DUI"
                     valor={dui}
                     maxLength={10}
-                    setValor={setDUI}
+                    onChangeText={setDUI}
                     keyboardType="default"
                     placeholder="Introduce tu DUI"
                     autoCapitalize="none"
@@ -187,7 +187,7 @@ const Perfil = ({ navigation }) => {
                     label="Teléfono"
                     valor={telefono}
                     maxLength={9}
-                    setValor={setTelefono}
+                    onChangeText={setTelefono}
                     keyboardType="numeric"
                     placeholder="Introduce tu número de teléfono"
                     autoCapitalize="none"
@@ -199,7 +199,7 @@ const Perfil = ({ navigation }) => {
                 <TextInput
                     label="Dirección"
                     valor={direccion}
-                    setValor={setDireccion}
+                    onChangeText={setDireccion}
                     keyboardType="default"
                     placeholder="Introduce tu dirección"
                     autoCapitalize="sentences"
