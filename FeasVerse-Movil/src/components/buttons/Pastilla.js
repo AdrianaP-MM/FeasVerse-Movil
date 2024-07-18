@@ -1,11 +1,18 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import Text from '../utils/Text';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Button({ text, action_button }) {
+export default function Button({ text, action}) {
+    const navigation = useNavigation();
+
+    const handlePress = () => {
+        navigation.navigate(action); // 'Zapatos' es la pantalla a la que quieres navegar
+    };
+    
     return (
         <TouchableOpacity
             style={styles.btn}
-            onPress={action_button}
+            onPress={handlePress}
         >
             <Text
                 texto={text}

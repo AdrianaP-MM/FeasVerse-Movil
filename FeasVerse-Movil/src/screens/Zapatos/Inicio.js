@@ -114,15 +114,15 @@ const Inicio = ({ navigation }) => {
 
     // Calcular altura dinámica para porcentajes
     const screenHeight = window.height;
-    const fila1Height = screenHeight * 0.60;
-    const whiteSpaceHeight = screenHeight * 0.85;
+    //const fila1Height = screenHeight * 0.85;
+    //const whiteSpaceHeight = screenHeight * 0.85;
 
     return (
         <View style={styles.containerTotal}>
             <StatusBar style="dark" backgroundColor="#1591CC" />
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View style={[styles.whiteSpace, { minHeight: whiteSpaceHeight }]}>
-                    <View style={[styles.fila1, { minHeight: fila1Height }]}>
+                <View style={styles.whiteSpace}>
+                    <View style={styles.fila1}>
                         <View style={styles.f1Header}>
                             <View style={styles.colTexto}>
                                 <Text texto={`¿Qué tal ${userName}?`} fontSize={24} color='white' font='TTWeb-SemiBold' />
@@ -144,9 +144,9 @@ const Inicio = ({ navigation }) => {
                         <View style={styles.f1Body}>
                             <Text texto='¿Qué quieres hacer hoy?' fontSize={18} color='white' font='TTWeb-Light' />
                             <View style={styles.rowGrap}>
-                                <Pastilla text='Ir de compras' />
-                                <Pastilla text='¡Ver los productos!' />
-                                <Pastilla text='Actualizar mi usuario' />
+                                <Pastilla text='Ir de compras' action={'Carrito'}/>
+                                <Pastilla text='¡Ver los productos!' action={'Zapatos'} />
+                                <Pastilla text='Actualizar mi usuario' action={'Perfil'}/>
                             </View>
                         </View>
                         <View style={styles.cardContainer}>
@@ -222,12 +222,14 @@ const styles = StyleSheet.create({
     },
     whiteSpace: {
         width: '100%',
+        minHeight: 700,
     },
     fila1: {
         width: '100%',
         backgroundColor: '#1591CC',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        minHeight: 500,
     },
     f1Header: {
         width: '100%',
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
         top: '63%',
         bottom: 0,
         width: '85%',
-        minHeight: '70%',
+        minHeight: 360,
         backgroundColor: 'white',
         borderRadius: 25,
         padding: 25,
