@@ -28,7 +28,7 @@ const App = () => {
     const [initialRoute, setInitialRoute] = useState('LogIn');
 
     const fetchData = async (api, action, formData = null) => {
-        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
         const response = await fetch(url, options);
         const text = await response.text();
