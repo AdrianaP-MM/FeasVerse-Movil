@@ -74,7 +74,7 @@ const Registrarse = ({ navigation }) => {
             return;
         }
 
-        let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=signUp`;
+        let url = `${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=signUp`;
         const formData = new FormData();
         formData.append('nombreInput', nombre);
         formData.append('apellidosInput', apellido);

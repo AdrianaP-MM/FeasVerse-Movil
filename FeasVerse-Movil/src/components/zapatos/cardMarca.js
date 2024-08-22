@@ -7,7 +7,7 @@ export default function CardCita({ accionCard, square = 150, marcaData }) {
         <TouchableOpacity onPress={accionCard}>
             <View style={[styles.containerTotal, { width: square, height: square }]}>
                 <Image
-                    source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/marcas/${marcaData.foto}` }}
+                    source={{ uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/marcas/${marcaData.foto}` }}
                     style={styles.marcaImg}
                 />
             </View>

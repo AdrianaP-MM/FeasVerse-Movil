@@ -26,7 +26,7 @@ const Carrito = ({ navigation }) => {
 
     // Función para obtener los datos de la API
     const fetchData = async (api, action, formData = null) => {
-        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
         const response = await fetch(url, options);
         const text = await response.text();
@@ -34,7 +34,7 @@ const Carrito = ({ navigation }) => {
     };
 
     const fetchUsuario = () => {
-        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+        fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
                 if (data.dataset) {
@@ -74,7 +74,7 @@ const Carrito = ({ navigation }) => {
     const fetchCartData = async () => {
         try {
             console.log("Fetching cart data...");  // Agrega este log
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=readAll`);
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/carrito.php?action=readAll`);
             const text = await response.text();
             try {
                 const result = JSON.parse(text);
@@ -110,7 +110,7 @@ const Carrito = ({ navigation }) => {
             const formData = new FormData();
             formData.append('idDetallesPedido', id);
 
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=deleteRow`, {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/carrito.php?action=deleteRow`, {
                 method: 'POST',
                 body: formData
             });
@@ -147,7 +147,7 @@ const Carrito = ({ navigation }) => {
             const formData = new FormData();
             formData.append('id_detalle_zapato', id_detalle_zapato);
             console.log(id);
-            const response = await fetch(`${Config.IP}/FeasVerse/api/${ZAPATOS_API}?action=validationCantidad`, {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/${ZAPATOS_API}?action=validationCantidad`, {
                 method: 'POST',
                 body: formData
             });
@@ -170,7 +170,7 @@ const Carrito = ({ navigation }) => {
             updateFormData.append('idDetallesPedido', id);
             updateFormData.append('cantidad', quantity);
 
-            const updateResponse = await fetch(`${Config.IP}/FeasVerse/api/services/publica/carrito.php?action=updateRow`, {
+            const updateResponse = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/carrito.php?action=updateRow`, {
                 method: 'POST',
                 body: updateFormData
             });

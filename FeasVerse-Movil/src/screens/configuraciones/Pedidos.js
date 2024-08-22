@@ -13,7 +13,7 @@ const Pedidos = ({ navigation }) => {
     const [products, setProducts] = useState([]);
 
     const fetchData = async (api, action, formData = null) => {
-        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
         const response = await fetch(url, options);
         const result = await response.json();
@@ -21,7 +21,7 @@ const Pedidos = ({ navigation }) => {
     };
 
     const fetchUsuario = () => {
-        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+        fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
                 if (data.dataset) {

@@ -4,7 +4,7 @@ import { Config } from './constantes';
 export const fillData = async ({ php, accion, method = 'GET', formData }) => {
     try {
         // Construir la URL para la solicitud
-        const url = `${Config.IP}/FeasVerse/api/services/publica/${php}.php?action=${accion}`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/services/publica/${php}.php?action=${accion}`;
         // Configurar las opciones de la solicitud, incluyendo el método y los datos del formulario si es un POST
         const options = method === 'POST' ? { method, body: formData } : {};
 

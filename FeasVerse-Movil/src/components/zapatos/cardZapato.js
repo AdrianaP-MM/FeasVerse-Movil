@@ -9,7 +9,7 @@ export default function CardZapato({ zapatoData }) {
             <View style={styles.container}>
                 <View style={styles.containerImg}>
                     <Image
-                        source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${zapatoData.foto}` }}
+                        source={{ uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/zapatos/${zapatoData.foto}` }}
                         style={styles.zapatoImg}
                     />
                 </View>

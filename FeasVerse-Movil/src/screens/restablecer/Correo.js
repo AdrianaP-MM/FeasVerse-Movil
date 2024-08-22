@@ -16,7 +16,7 @@ const Correo = ({ navigation }) => {
         formData.append('correo_electronico_paso1', email);
 
         try {
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=searchMail`, {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=searchMail`, {
                 method: 'POST',
                 body: formData,
             });
@@ -28,7 +28,7 @@ const Correo = ({ navigation }) => {
                 form2.append('correo_electronico_paso1', email);
                 form2.append('nombre_destinatario', data.dataset.nombre_trabajador);
 
-                const response2 = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=enviarCodigoRecuperacion`, {
+                const response2 = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=enviarCodigoRecuperacion`, {
                     method: 'POST',
                     body: form2,
                 });

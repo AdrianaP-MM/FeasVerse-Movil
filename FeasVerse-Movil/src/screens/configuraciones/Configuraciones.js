@@ -21,7 +21,7 @@ const Configuraciones = ({ navigation }) => {
     
     // Función para obtener el nombre del usuario
     const fetchUsuario = () => {
-        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+        fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
                 if (data.dataset) {
@@ -38,7 +38,7 @@ const Configuraciones = ({ navigation }) => {
 
     // Función para cerrar la sesión del usuario
     const handleLogOut = async () => {
-        const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=logOut`;
         const fetchApi = await fetch(url);
         const datos = await fetchApi.json();
         if (datos.status) {

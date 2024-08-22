@@ -272,7 +272,7 @@ const Zapatos = ({ route }) => {
                     <View style={styles.colImg}>
                         <Image
                             source={infoZapato.foto_detalle_zapato ?
-                                { uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${infoZapato.foto_detalle_zapato}` }
+                                { uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/zapatos/${infoZapato.foto_detalle_zapato}` }
                                 : require('../../img/defaultImage.png')}
                             style={styles.shoeImg}
                         />

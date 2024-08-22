@@ -6,7 +6,7 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 const OrderProductCard = ({ product, onEdit, onDelete }) => {
     return (
         <View style={styles.productContainer}>
-            <Image source={{ uri: `${Config.IP}/FeasVerse/api/helpers/images/zapatos/${product.image}` }} style={styles.productImage} />
+            <Image source={{ uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/zapatos/${product.image}` }} style={styles.productImage} />
             <View style={styles.productDetails}>
                 <Text style={styles.productName}>{product.name}</Text>
                 <Text style={styles.productGender}>{product.gender}</Text>

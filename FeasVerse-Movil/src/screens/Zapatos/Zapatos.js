@@ -192,7 +192,7 @@ const Zapatos = ({ navigation }) => {
                         <View style={styles.colImage}>
                             <Image
                                 source={marcaSelected.foto_marca ?
-                                    { uri: `${Config.IP}/FeasVerse/api/helpers/images/marcas/${marcaSelected.foto_marca}` }
+                                    { uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/marcas/${marcaSelected.foto_marca}` }
                                     : require('../../img/defaultImage.png')}
                                 style={styles.marcaImg}
                             />

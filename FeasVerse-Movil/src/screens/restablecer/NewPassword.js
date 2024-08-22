@@ -34,7 +34,7 @@ const NewPassword = ({ route, navigation }) => {
         formData.append('confirmarCliente', confirmPassword);
 
         try {
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=changePasswordLogin`, {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=changePasswordLogin`, {
                 method: 'POST',
                 body: formData,
             });

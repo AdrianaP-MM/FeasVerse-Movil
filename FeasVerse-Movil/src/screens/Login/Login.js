@@ -53,7 +53,7 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
 
     // Manejar el inicio de sesión
     const handlerLogin = async () => {
-        let url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logIn`;
+        let url = `${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=logIn`;
         const formData = new FormData();
         formData.append('correo', correo);
         formData.append('clave', clave);
@@ -76,7 +76,7 @@ const LogIn = ({ logueado, setLogueado, navigation }) => {
 
     // Manejar el cierre de sesión
     const handleLogOut = async () => {
-        const url = `${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=logOut`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=logOut`;
         // Realizar la petición HTTP
         const fetchApi = await fetch(url);
         const datos = await fetchApi.json();

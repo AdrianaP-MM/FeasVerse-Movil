@@ -15,7 +15,7 @@ const MostrarDetalles = ({ route, navigation }) => {
     const [total, setTotal] = useState(0);
 
     const fetchData = async (api, action, formData = null) => {
-        const url = `${Config.IP}/FeasVerse/api/${api}?action=${action}`;
+        const url = `${Config.IP}/FeasVerse-Api-main/api/${api}?action=${action}`;
         const options = formData ? { method: 'POST', body: formData } : { method: 'GET' };
         const response = await fetch(url, options);
         const result = await response.json();
@@ -23,7 +23,7 @@ const MostrarDetalles = ({ route, navigation }) => {
     };
 
     const fetchUsuario = () => {
-        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+        fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
                 if (data.dataset) {

@@ -39,7 +39,7 @@ const Perfil = ({ navigation }) => {
     // Función para obtener los datos del usuario
     const fetchUsuario = () => {
         setLoading(true);
-        fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=readCliente`)
+        fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
                 console.log("Datos recibidos del servidor:", data); 
@@ -78,7 +78,7 @@ const Perfil = ({ navigation }) => {
             formData.append('fechanInput', modalNacimiento.toISOString().split('T')[0]);
             formData.append('direccion', modalDireccion);
     
-            const response = await fetch(`${Config.IP}/FeasVerse/api/services/publica/cliente.php?action=editProfile`, {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=editProfile`, {
                 method: 'POST',
                 body: formData
             });
