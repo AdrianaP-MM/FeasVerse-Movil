@@ -21,7 +21,7 @@ export default function CardZapato({ zapatoData }) {
                     <View style={styles.text2}>
                         <View style={styles.starGrap}>
                             <Image
-                                source={require('../../img/icons/iconStar.png')}
+                                source={require('../../img/icons/iconStar.jpg')}
                             />
                             <Text texto={`${zapatoData.estrellas || 0}`} fontSize={15} color='#FFA700' font='TTWeb-Bold' />
                         </View>

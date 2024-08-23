@@ -273,7 +273,7 @@ const Zapatos = ({ route }) => {
                         <Image
                             source={infoZapato.foto_detalle_zapato ?
                                 { uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/zapatos/${infoZapato.foto_detalle_zapato}` }
-                                : require('../../img/defaultImage.png')}
+                                : require('../../img/defaultImage.jpg')}
                             style={styles.shoeImg}
                         />
                     </View>
@@ -286,7 +286,7 @@ const Zapatos = ({ route }) => {
                             <Text texto={`$${infoZapato.precio_unitario_zapato}`} fontSize={20} font='TTWeb-Bold' />
                             <View style={styles.starGrap}>
                                 <Image
-                                    source={require('../../img/icons/iconStar.png')}
+                                    source={require('../../img/icons/iconStar.jpg')}
                                 />
                                 <Text texto={`${infoZapato.estrellas || 0}`} fontSize={15} color='#FFA700' font='TTWeb-Bold' />
                             </View>

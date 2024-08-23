@@ -9,6 +9,8 @@ import { Colors, FontSizes, Config } from '../../utils/constantes';
 import Input from '../../components/inputs/AllBorders'
 import { fillData } from '../../utils/fillData';
 
+
+
 const window = Dimensions.get('window'); // Obtener dimensiones de la ventana
 
 const Zapatos = ({ navigation }) => {
@@ -193,7 +195,7 @@ const Zapatos = ({ navigation }) => {
                             <Image
                                 source={marcaSelected.foto_marca ?
                                     { uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/marcas/${marcaSelected.foto_marca}` }
-                                    : require('../../img/defaultImage.png')}
+                                    : require('../../img/defaultImage.jpg')}
                                 style={styles.marcaImg}
                             />
                         </View>
@@ -212,7 +214,7 @@ const Zapatos = ({ navigation }) => {
                     <Input
                         placeholder='Búsqueda...'
                         width='80%'
-                        iconImage={require('../../img/icons/iconLupa.png')}
+                        iconImage={require('../../img/icons/iconLupa.jpg')}
                         onChangeText={searchZapatos}
                     />
 

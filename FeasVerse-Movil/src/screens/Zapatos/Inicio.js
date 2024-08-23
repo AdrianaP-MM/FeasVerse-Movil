@@ -129,7 +129,7 @@ const Inicio = ({ navigation }) => {
                                 <View style={styles.rowGrap}>
                                     <Text texto='Somos' fontSize={24} color='white' font='TTWeb-Bold' />
                                     <Image
-                                        source={require('../../img/icons/iconZapato.png')}
+                                        source={require('../../img/icons/iconZapato.jpg')}
                                         style={styles.shoeImage}
                                     />
                                 </View>
@@ -137,7 +137,7 @@ const Inicio = ({ navigation }) => {
                             </View>
                             <View style={styles.colImg}>
                                 <Image
-                                    source={require('../../img/zapatos/shoeImg.png')}
+                                    source={require('../../img/zapatos/shoeImg.jpg')}
                                 />
                             </View>
                         </View>
@@ -159,7 +159,7 @@ const Inicio = ({ navigation }) => {
                                     <Image
                                         source={masVendido.foto_detalle_zapato ?
                                             { uri: `${Config.IP}/FeasVerse-Api-main/api/helpers/images/zapatos/${masVendido.foto_detalle_zapato}` }
-                                            : require('../../img/defaultImage.png')}
+                                            : require('../../img/defaultImage.jpg')}
                                         style={styles.shoeImg}
                                     />
                                 </TouchableOpacity>

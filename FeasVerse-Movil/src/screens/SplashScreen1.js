@@ -43,7 +43,7 @@ const SplashScreen1 = ({ onFinish }) => {
     return (
         <View style={styles.container}>
             <Animated.Image
-                source={require('../img/zapato.png')}
+                source={require('../img/zapato.jpg')}
                 style={[styles.image, { transform: [{ rotate: spin }] }]}
             />
             <Text style={styles.message}>{message}</Text>

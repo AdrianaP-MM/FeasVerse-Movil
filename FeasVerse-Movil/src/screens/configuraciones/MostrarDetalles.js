@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import OrderProductCard from '../../components/Cards/OrderProductCard';
 import { Colors, FontSizes, Config } from '../../utils/constantes';
 import { useFocusEffect } from '@react-navigation/native';
-import { Rating } from 'react-native-ratings'; // Importa Rating desde react-native-ratings
+import { Rating } from 'react-native-ratings';
 import { Picker } from '@react-native-picker/picker';
 
 const { width } = Dimensions.get('window');
@@ -20,7 +20,6 @@ const MostrarDetalles = ({ route, navigation }) => {
     const [tituloComentario, setTituloComentario] = useState('');
     const [descripcionComentario, setDescripcionComentario] = useState('');
     const [calificacion, setCalificacion] = useState(0);
-    const [coloresZapato, setColoresZapato] = useState([]);
 
     const fetchData = async (api, action, formData = null) => {
         const url = `${Config.IP}/FeasVerse-Api-main/api/${api}?action=${action}`;
@@ -49,20 +48,19 @@ const MostrarDetalles = ({ route, navigation }) => {
         }
     };
 
-    const fetchUsuario = () => {
-        fetch`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente)`
-            .then(response => response.json())
-            .then(data => {
-                if (data.dataset) {
-                    const usuario = data.dataset;
-                    setNombre(usuario.nombre_cliente);
-                } else {
-                    console.error('Datos no están en el formato esperado:', data);
-                }
-            })
-            .catch(error => {
-                console.error("Error al cargar los datos:", error);
-            });
+    const fetchUsuario = async () => {
+        try {
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`);
+            const data = await response.json();
+            if (data.dataset) {
+                const usuario = data.dataset;
+                setNombre(usuario.nombre_cliente);
+            } else {
+                console.error('Datos no están en el formato esperado:', data);
+            }
+        } catch (error) {
+            console.error("Error al cargar los datos:", error);
+        }
     };
 
     const calculateTotal = (products) => {
@@ -98,33 +96,55 @@ const MostrarDetalles = ({ route, navigation }) => {
         setIsModalVisible(false);
     };
 
+    const formatFecha = (date) => {
+        const d = new Date(date);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
     const handleCommentSubmit = async () => {
         if (!selectedZapato || !tituloComentario || !descripcionComentario || calificacion <= 0) {
             Alert.alert('Por favor, complete todos los campos.');
             return;
         }
-
+    
         try {
+            // Crear un objeto FormData para enviar los datos
             const FORM = new FormData();
-            FORM.append('idDetalleZapato', selectedZapato);
             FORM.append('tituloComentario', tituloComentario);
             FORM.append('descripcionComentario', descripcionComentario);
-            FORM.append('fecha', new Date().toISOString());
-            FORM.append('calificacion', calificacion);
-            FORM.append('estado', 'pendiente');
-
-            const response = await fetchData(PEDIDOS_API, 'comentarioCreate', FORM);
-            if (response.status) {
+            FORM.append('calificacion', calificacion.toString());
+            FORM.append('estado', 'Desactivo'); // Verifica si este valor es válido para el campo `estado_comentario`
+            FORM.append('fecha', formatFecha(new Date())); // Asegúrate de que este formato sea el esperado por la base de datos
+            FORM.append('idDetalleZapato', selectedZapato); // Verifica que el ID sea correcto
+    
+            // Configurar la solicitud de fetch
+            const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/${PEDIDOS_API}?action=comentarioCreate`, {
+                method: 'POST',
+                body: FORM
+            });
+    
+            // Procesar la respuesta como JSON
+            const result = await response.json();
+            console.log('API Response:', result);
+            console.log('Form Data:', FORM);
+    
+            // Verificar si la solicitud fue exitosa
+            if (response.ok && result.status) {
                 Alert.alert('Comentario creado exitosamente');
                 closeModal();
             } else {
-                Alert.alert(response.error);
+                Alert.alert(result.error || 'Ha ocurrido un error.');
             }
         } catch (error) {
             Alert.alert('Error al enviar el comentario');
             console.error('Fetch error:', error);
         }
     };
+    
+    
+    
 
     return (
         <SafeAreaView style={styles.container}>

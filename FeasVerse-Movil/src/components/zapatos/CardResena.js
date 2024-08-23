@@ -15,7 +15,7 @@ export default function CardResena({resenaData}) {
             </View>
             <View style={styles.cardFooter}>
                 <Image
-                    source={require('../../img/icons/iconStarGrup.png')}
+                    source={require('../../img/icons/iconStarGrup.jpg')}
                     style={styles.zapatoImg}
                 />
             </View>

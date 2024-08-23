@@ -7,7 +7,7 @@ import CustomTextInputPassword from '../../components/inputs/CustomTextInputPass
 import * as Font from 'expo-font';
 
 // Importar el componente de inicio de sesión
-const logoImg = require("../../img/LogoFeasVerse.png");
+const logoImg = require("../../img/LogoFeasVerse.jpg");
 
 // Componente funcional LogIn
 const LogIn = ({ logueado, setLogueado, navigation }) => {
