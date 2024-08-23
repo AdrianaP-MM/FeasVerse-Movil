@@ -39,6 +39,7 @@ const Pedidos = ({ navigation }) => {
     const fetchPedidosData = async () => {
         try {
             const response = await fetchData(PEDIDOS_API, 'readAllOrdersOfClients');
+            console.log(response);
             if (response.status) {
                 setProducts(response.dataset);
             } else if (response.message === 'Acceso denegado') {
