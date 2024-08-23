@@ -55,12 +55,12 @@ const Inicio = ({ navigation }) => {
                 fillData({ php: 'cliente', accion: 'readCliente' }),
                 fillData({ php: 'zapatos', accion: 'readAllEspecial' }),
                 fillData({ php: 'marcas', accion: 'readAll' }),
-                fillData({ php: 'zapatos', accion: 'readMasVendido' }),
+                fillData({ php: 'zapatos', accion: 'readResumeAllZapatos' }),
                 fillData({ php: 'cliente', accion: 'readCantidadPedidosPorMes' })
             ]);
 
             const [response, responseShoe, responseMarcas, responseShoeVendido, responsePedidosPorMes] = responses;
-
+            console.log(responseShoeVendido);
             if (responsePedidosPorMes) {
                 setCantdPedidosPorMes(responsePedidosPorMes);
             } else {

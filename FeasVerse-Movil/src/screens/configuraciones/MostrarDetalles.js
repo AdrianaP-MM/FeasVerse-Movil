@@ -114,21 +114,22 @@ const MostrarDetalles = ({ route, navigation }) => {
             const FORM = new FormData();
             FORM.append('tituloComentario', tituloComentario);
             FORM.append('descripcionComentario', descripcionComentario);
-            FORM.append('calificacion', calificacion.toString());
-            FORM.append('estado', 'Desactivo'); // Verifica si este valor es válido para el campo `estado_comentario`
+            FORM.append('calificacion', parseInt(calificacion.toString()));
+            FORM.append('estado', 2); // Verifica si este valor es válido para el campo `estado_comentario`
             FORM.append('fecha', formatFecha(new Date())); // Asegúrate de que este formato sea el esperado por la base de datos
-            FORM.append('idDetalleZapato', selectedZapato); // Verifica que el ID sea correcto
+            FORM.append('idDetalleZapato', parseInt(selectedZapato)); // Verifica que el ID sea correcto
     
             // Configurar la solicitud de fetch
             const response = await fetch(`${Config.IP}/FeasVerse-Api-main/api/${PEDIDOS_API}?action=comentarioCreate`, {
                 method: 'POST',
                 body: FORM
             });
-    
+            
+            console.log('Form Data:', FORM);
+            console.log('API URL:', response);
             // Procesar la respuesta como JSON
             const result = await response.json();
             console.log('API Response:', result);
-            console.log('Form Data:', FORM);
     
             // Verificar si la solicitud fue exitosa
             if (response.ok && result.status) {
@@ -189,12 +190,14 @@ const MostrarDetalles = ({ route, navigation }) => {
             >
                 <Text style={styles.backButtonText}>Regresar</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.commentButton}
-                onPress={openModal}
-            >
-                <Text style={styles.commentButtonText}>Comentar pedido</Text>
-            </TouchableOpacity>
+            {estadoPedido === 'Entregado' && (
+                <TouchableOpacity
+                    style={styles.commentButton}
+                    onPress={openModal}
+                >
+                    <Text style={styles.commentButtonText}>Comentar pedido</Text>
+                </TouchableOpacity>
+            )}
             <Modal
                 animationType="slide"
                 transparent={true}

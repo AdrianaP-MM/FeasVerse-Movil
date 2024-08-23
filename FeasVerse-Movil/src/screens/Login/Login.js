@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        marginLeft: 20,
+        marginRight: 20,
     },
     logo: {
         width: 120,

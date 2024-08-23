@@ -77,18 +77,18 @@ const Zapatos = ({ navigation }) => {
                 } else {
                     Alert.alert('No hay Marcas', 'No se pudo obtener las marcas o no hay marcas disponibles.');
                 }
+                if (responseShoe) {
+                    setZapatos(responseShoe);
+                } else {
+                    Alert.alert('No hay Zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
+                }
             }
 
-            if (responseShoe) {
-                setZapatos(responseShoe);
-            } else {
-                Alert.alert('No hay Zapatos', 'No se pudo obtener los zapatos o no hay zapatos disponibles.');
-            }
 
         } catch (error) {
             console.error('Error en leer los elementos:', error);
             //Alert.alert('Error', 'Hubo un error al obtener los datos.');
-            readElements();
+            redElements();
         }
     };
 
