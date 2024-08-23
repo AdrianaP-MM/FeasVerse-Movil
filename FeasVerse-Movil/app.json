@@ -19,7 +19,7 @@
         "foregroundImage": "./src/img/zapato.png",
         "backgroundColor": "#1591CC"
       },
-      "package": "com.emu08.FeasVerseMovil"
+      "package": "com.adrianamejia.FeasVerseMovil"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,7 +29,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "48faef26-226d-419d-9967-b4a18ed7189b"
+        "projectId": "26b31577-8f4c-413f-856a-4c8ec9abe358"
       }
     }
   }
