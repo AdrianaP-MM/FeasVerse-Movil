@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions, Modal, Pressable, ActivityIndicator, Alert, Button, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, FontSizes, Config } from '../../utils/constantes';
 import { useFocusEffect } from '@react-navigation/native';
+import { Colors, FontSizes, Config } from '../../utils/constantes';
 
-// para conseguir el width de la pantalla
 const { width } = Dimensions.get('window');
 
 // Componente funcional Perfil
@@ -16,7 +15,6 @@ const Perfil = ({ navigation }) => {
     const [idCliente, setID] = useState('');
     const [telefono, setTelefono] = useState('');
     const [nacimiento, setNacimiento] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
     const [direccion, setDireccion] = useState('');
     const [loading, setLoading] = useState(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,20 +27,17 @@ const Perfil = ({ navigation }) => {
     const [modalDireccion, setModalDireccion] = useState('');
     const [modalID, setModalID] = useState('');
 
-    // Efecto para cargar los datos del carrito
     useFocusEffect(
         React.useCallback(() => {
             fetchUsuario();
         }, [])
     );
 
-    // Función para obtener los datos del usuario
     const fetchUsuario = () => {
         setLoading(true);
         fetch(`${Config.IP}/FeasVerse-Api-main/api/services/publica/cliente.php?action=readCliente`)
             .then(response => response.json())
             .then(data => {
-                console.log("Datos recibidos del servidor:", data); 
                 if (data.dataset) {
                     const usuario = data.dataset;
                     setNombre(usuario.nombre_cliente);
@@ -55,7 +50,6 @@ const Perfil = ({ navigation }) => {
                     setID(usuario.id_cliente);
                     setLoading(false);
                 } else {
-                    console.error('Datos no están en el formato esperado:', data);
                     setLoading(false);
                 }
             })
@@ -65,7 +59,6 @@ const Perfil = ({ navigation }) => {
             });
     };
 
-    // Función para editar los datos del usuario
     const handleEdit = async () => {
         try {
             const formData = new FormData();
@@ -103,17 +96,15 @@ const Perfil = ({ navigation }) => {
         }
     };
 
-    // Verificar si la carga de datos está en proceso
     if (loading) {
         return (
             <View style={styles.loader}>
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#007BFF" />
                 <Text>Cargando...</Text>
             </View>
         );
     }
 
-    // Función para abrir el modal de edición
     const openModal = () => {
         setModalNombre(nombre);
         setModalApellido(apellido);
@@ -126,92 +117,67 @@ const Perfil = ({ navigation }) => {
         setIsModalVisible(true);
     };
 
-    // Función para cerrar el modal de edición
     const closeModal = () => {
         setIsModalVisible(false);
     };
 
-    // Estructura de la pantalla
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
-                <View style={styles.headerLabel}>
-                    <Ionicons name="person" size={40} color="#fff" />
-                </View>
+                <Ionicons name="person-circle" size={80} color="#fff" />
                 <View style={styles.headerTextContainer}>
                     <Text style={styles.headerTextLight}>Hola, {nombre}</Text>
                     <Text style={styles.headerTextBold}>Tu Perfil</Text>
                 </View>
             </View>
-            <View style={styles.labelBackground} />
-            <View style={styles.headerLine} />
-            <View style={styles.inputs}>
+            <ScrollView contentContainerStyle={styles.content}>
                 <TextInput
-                    label="Nombre"
-                    valor={nombre}
-                    onChangeText={setNombre}
-                    keyboardType="default"
-                    placeholder="Introduce tu nombre"
-                    autoCapitalize="words"
+                    style={styles.input}
+                    value={nombre}
+                    placeholder="Nombre"
                     editable={false}
                 />
                 <TextInput
-                    label="Apellido"
-                    valor={apellido}
-                    onChangeText={setApellido}
-                    keyboardType="default"
-                    placeholder="Introduce tu apellido"
-                    autoCapitalize="words"
+                    style={styles.input}
+                    value={apellido}
+                    placeholder="Apellido"
                     editable={false}
                 />
                 <TextInput
-                    label="Correo electrónico"
-                    valor={correo}
-                    onChangeText={setCorreo}
+                    style={styles.input}
+                    value={correo}
+                    placeholder="Correo electrónico"
                     keyboardType="email-address"
-                    placeholder="Introduce tu correo"
-                    autoCapitalize="none"
                     editable={false}
                 />
                 <TextInput
-                    label="DUI"
-                    valor={dui}
+                    style={styles.input}
+                    value={dui}
+                    placeholder="DUI"
                     maxLength={10}
-                    onChangeText={setDUI}
-                    keyboardType="default"
-                    placeholder="Introduce tu DUI"
-                    autoCapitalize="none"
                     editable={false}
                 />
                 <TextInput
-                    label="Teléfono"
-                    valor={telefono}
-                    maxLength={9}
-                    onChangeText={setTelefono}
+                    style={styles.input}
+                    value={telefono}
+                    placeholder="Teléfono"
                     keyboardType="numeric"
-                    placeholder="Introduce tu número de teléfono"
-                    autoCapitalize="none"
+                    maxLength={9}
                     editable={false}
                 />
                 <View style={styles.containerFecha}>
                     <Text style={styles.text}>Fecha de nacimiento: {nacimiento.toLocaleDateString()}</Text>
                 </View>
                 <TextInput
-                    label="Dirección"
-                    valor={direccion}
-                    onChangeText={setDireccion}
-                    keyboardType="default"
-                    placeholder="Introduce tu dirección"
-                    autoCapitalize="sentences"
+                    style={styles.input}
+                    value={direccion}
+                    placeholder="Dirección"
                     editable={false}
                 />
-                <View style={styles.btnContainer}>
-                    <Button
-                        title="Editar Informacion"
-                        onPress={openModal}
-                    />
-                </View>
-            </View>
+                <TouchableOpacity style={styles.btnContainer} onPress={openModal}>
+                    <Text style={styles.btnText}>Editar Información</Text>
+                </TouchableOpacity>
+            </ScrollView>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -222,33 +188,34 @@ const Perfil = ({ navigation }) => {
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Editar Información</Text>
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalNombre}
                             value={modalNombre}
                             placeholder="Nombre"
                         />
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalApellido}
                             value={modalApellido}
                             placeholder="Apellido"
                         />
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalCorreo}
                             value={modalCorreo}
                             placeholder="Correo"
                             keyboardType="email-address"
+                            editable={false}
                         />
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalDUI}
                             value={modalDUI}
                             placeholder="DUI"
                             maxLength={10}
                         />
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalTelefono}
                             value={modalTelefono}
                             placeholder="Teléfono"
@@ -256,22 +223,16 @@ const Perfil = ({ navigation }) => {
                             maxLength={9}
                         />
                         <TextInput
-                            style={styles.input}
+                            style={styles.modalInput}
                             onChangeText={setModalDireccion}
                             value={modalDireccion}
                             placeholder="Dirección"
                         />
-                        <View style={styles.btnContainer}>
-                            <Button
-                                title="Guardar"
-                                onPress={handleEdit}
-                            />
-                        </View>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={closeModal}
-                        >
-                            <Text style={styles.textStyle}>Cerrar</Text>
+                        <TouchableOpacity style={styles.modalBtnContainer} onPress={handleEdit}>
+                            <Text style={styles.btnText}>Guardar</Text>
+                        </TouchableOpacity>
+                        <Pressable style={styles.modalCloseBtn} onPress={closeModal}>
+                            <Text style={styles.modalCloseText}>Cerrar</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -280,156 +241,114 @@ const Perfil = ({ navigation }) => {
     );
 };
 
-// Estilos para los componentes de la pantalla
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F3F4F6',
     },
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#007BFF',
-        paddingVertical: 20,
-        paddingHorizontal: 10,
+        paddingVertical: 30,
+        paddingHorizontal: 20,
         borderBottomRightRadius: 20,
-    },
-    btnContainer: {
-        marginTop: 20,
-        width: '80%',
-        backgroundColor: '#0D4560',
-        height: 50,
-        borderRadius: 4,
-        overflow: 'hidden',
-    },
-    headerLabel: {
-        backgroundColor: '#007BFF',
-        padding: 10,
-        borderRadius: 10,
-        marginRight: 10,
+        borderBottomLeftRadius: 20,
     },
     headerTextContainer: {
-        flex: 1,
-        justifyContent: 'center',
+        marginLeft: 20,
     },
     headerTextLight: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '300',
-        textAlign: 'left',
     },
     headerTextBold: {
         color: '#fff',
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'left',
-    },
-    labelBackground: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        width: width * 0.4,
-        height: 160,
-        backgroundColor: '#007BFF',
-        zIndex: 2,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 40,
-    },
-    headerLine: {
-        height: 15,
-        backgroundColor: '#007BFF',
-        opacity: 0.5,
-    },
-    scrollView: {
-        marginHorizontal: 20,
-        marginTop: 50,
-        marginBottom: 20,
-    },
-    totalContainer: {
-        marginBottom: 20,
-        marginHorizontal: 30,
-    },
-    totalText: {
-        fontSize: 20,
+        fontSize: 26,
         fontWeight: 'bold',
     },
-    buyButton: {
-        backgroundColor: '#007BFF',
-        padding: 15,
+    content: {
+        padding: 20,
+    },
+    input: {
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
         borderRadius: 10,
-        marginHorizontal: 20,
-        alignItems: 'center',
-        marginBottom: 20,
+        padding: 12,
+        marginBottom: 15,
+        backgroundColor: '#FFF',
     },
-    buyButtonText: {
+    btnContainer: {
+        backgroundColor: '#007BFF',
+        paddingVertical: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    btnText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
+    },
+    containerFecha: {
+        marginBottom: 15,
+    },
+    text: {
+        fontSize: 16,
+        color: '#6B7280',
+    },
+    loader: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        margin: 20,
-        backgroundColor: 'white',
+        width: width * 0.9,
+        backgroundColor: '#FFF',
         borderRadius: 20,
         padding: 35,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        width: '90%',
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-    },
-    buttonClose: {
-        backgroundColor: '#2196F3',
-    },
-    textStyle: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
     modalText: {
+        fontSize: 20,
         marginBottom: 15,
-        textAlign: 'center',
+        fontWeight: 'bold',
     },
-    loader: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    inputs: {
-        marginTop: 30,
-        marginHorizontal: 20,
-    },
-    containerFecha: {
-        marginVertical: 10,
-    },
-    text: {
-        fontSize: 16,
-        marginVertical: 10,
-    },
-    input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 20,
-        paddingHorizontal: 10,
+    modalInput: {
         width: '100%',
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 12,
+        marginBottom: 15,
+        backgroundColor: '#F9FAFB',
+    },
+    modalBtnContainer: {
+        backgroundColor: '#10B981',
+        paddingVertical: 15,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+    },
+    modalCloseBtn: {
+        marginTop: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+        borderColor: '#D1D5DB',
+        borderWidth: 1,
+    },
+    modalCloseText: {
+        color: '#6B7280',
+        fontSize: 16,
     },
 });
 
-// Exportar el componente Perfil
 export default Perfil;
